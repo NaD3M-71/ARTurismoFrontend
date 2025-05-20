@@ -1,0 +1,78 @@
+import { useState, useEffect } from 'react';
+import clienteAxios from '../../config/axios';
+import { Link } from 'react-router-dom';
+
+export default function Admin() {
+  const [ciudades, setCiudades] = useState([]);
+
+  useEffect(() => {
+    const obtenerCiudades = async () => {
+      try {
+        const { data } = await clienteAxios.get('/ciudades');
+        setCiudades(data);
+      } catch (error) {
+        console.log('Error al obtener las ciudades', error);
+      }
+    };
+
+    obtenerCiudades();
+  }, []);
+
+  const ciudadesPorProvincia = ciudades.reduce((acc, ciudad) => {
+    const { provincia } = ciudad;
+    if (!acc[provincia]) {
+      acc[provincia] = [];
+    }
+    acc[provincia].push(ciudad);
+    return acc;
+  }, {});
+
+  return (
+    <>
+      <div className="text-center">
+        <h1>Admin</h1>
+      </div>
+
+      {/* Botón para agregar ciudad */}
+      <a className="btn btn-primary m-4" href="/admin/agregar-ciudad">AGREGAR CIUDAD</a>
+
+      {/* Listado de ciudades por provincia */}
+      <div className="m-5">
+        {Object.keys(ciudadesPorProvincia).length > 0 ? (
+          Object.keys(ciudadesPorProvincia).map((provincia) => (
+            <div key={provincia} className="mb-4">
+              <h3>{provincia}</h3>
+              <ul className="list-group">
+                {ciudadesPorProvincia[provincia].map((ciudad) => (
+                  <li key={ciudad._id} className="list-group-item d-flex justify-content-between align-items-center">
+                    {/* Nombre de la ciudad */}
+                    <a href={`/ciudad/${ciudad._id}`} className='btn btn-amarillo' >{ciudad.nombre}</a>
+
+                    {/* Contenedor de botones alineados a la derecha */}
+                    <div className="d-flex ms-auto">
+                      <Link
+                        to={`/admin/agregar-cliente?ciudadId=${ciudad._id}&ciudadNombre=${encodeURIComponent(ciudad.nombre)}`}
+                        className="btn btn-success me-2"
+                      >
+                        Agregar Cliente
+                      </Link>
+
+                      <Link
+                        to={`/admin/ver-proveedores?ciudadId=${ciudad._id}&ciudadNombre=${encodeURIComponent(ciudad.nombre)}`}
+                        className="btn btn-info"
+                      >
+                        Ver Proveedores
+                      </Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        ) : (
+          <p>No se encontraron ciudades.</p>
+        )}
+      </div>
+    </>
+  );
+}
