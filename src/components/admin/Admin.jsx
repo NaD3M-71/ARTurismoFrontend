@@ -58,7 +58,7 @@ export default function Admin() {
                       </Link>
 
                       <Link
-                        to={`/admin/ver-proveedores?ciudadId=${ciudad._id}&ciudadNombre=${encodeURIComponent(ciudad.nombre)}`}
+                        to={`/admin/ver-proveedores/${encodeURIComponent(ciudad.nombre)}`}
                         className="btn btn-info"
                       >
                         Ver Proveedores

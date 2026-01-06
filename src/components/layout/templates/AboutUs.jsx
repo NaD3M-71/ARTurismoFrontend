@@ -29,7 +29,7 @@ export default function AboutUs() {
             <div className='amarilloART p-5 d-flex flex-column align-items-center'>
                 <h4 className='text-center'>Sos prestador y querés formar parte de AR Turismo? <br></br>Contactanos directamente</h4>
                 <div>
-                    <a href="" className='btn btn-celeste text-dark fw-bold' >ACÁ</a>
+                    <a href="mailto:contacto@arturismo.com.ar" className='btn btn-celeste text-dark fw-bold' >ACÁ</a>
                 </div>
             </div>
     </>

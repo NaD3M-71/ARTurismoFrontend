@@ -15,6 +15,8 @@ import NuevoCliente from './components/admin/NuevoCliente';
 import VerProveedores from './components/admin/Proveedores';
 import Actividad from './components/layout/ciudad/Actividad';
 import Ciudades from './components/layout/ciudad/Ciudades';
+import EditarCliente from './components/admin/EditarCliente';
+import EditarImagenesCliente from './components/admin/EditarImagenesCliente';
 
 
 
@@ -32,11 +34,15 @@ function App() {
             <Route exact path='/ciudades' element={<Ciudades />}></Route>
             <Route exact path='/actividad/:id' element={<Actividad actividad />}></Route>
 
+
             {/* Admin */}
             <Route exact path='/admin' element={<Admin />}></Route>
             <Route exact path='/admin/agregar-ciudad' element={<NuevaCiudad />}></Route>
             <Route exact path='/admin/agregar-cliente' element={<NuevoCliente />}></Route>
-            <Route exact path='/admin/ver-proovedores' element={<VerProveedores />}></Route>
+            <Route exact path='/admin/editar-cliente/:id' element={<EditarCliente />}></Route>
+            <Route exact path='/admin/editar-cliente/:id/imagen' element={<EditarImagenesCliente />}></Route>
+            <Route exact path='/admin/ver-proveedores/:ciudadNombre' element={<VerProveedores proveedores/>}></Route>
+            
 
           </Routes>
         </main>

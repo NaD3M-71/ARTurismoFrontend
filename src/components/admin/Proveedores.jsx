@@ -1,34 +1,52 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useParams} from 'react-router-dom';
 import clienteAxios from '../../config/axios';
 
 export default function VerProveedores() {
-  const [searchParams] = useSearchParams();
-  const ciudadId = searchParams.get('ciudadId');
-  const ciudadNombre = searchParams.get('ciudadNombre');
+  const { ciudadNombre } = useParams();
+  //const ciudadId = searchParams.get('ciudadId');
+
   
+  console.log(ciudadNombre);
   const [proveedores, setProveedores] = useState([]);
 
   useEffect(() => {
     const obtenerProveedores = async () => {
       try {
-        const { data } = await clienteAxios.get(`/clientes?ciudadId=${ciudadId}`);
+        const { data } = await clienteAxios.get(`/clientes/ciudad/${ciudadNombre}`);
         setProveedores(data);
       } catch (error) {
         console.log('Error al obtener los proveedores', error);
       }
     };
 
-    if (ciudadId) obtenerProveedores();
-  }, [ciudadId]);
+    if (ciudadNombre) obtenerProveedores();
+  }, [ciudadNombre]);
 
   return (
     <div>
-      <h2>Proveedores en {ciudadNombre || "Ciudad Desconocida"}</h2>
+      <h2>Clientes en {ciudadNombre || "Ciudad Desconocida"}</h2>
       {proveedores.length > 0 ? (
-        <ul>
+        <ul className="list-group">
           {proveedores.map((proveedor) => (
-            <li key={proveedor._id}>{proveedor.nombre} - {proveedor.servicio}</li>
+            <li key={proveedor._id} className="list-group-item d-flex justify-content-between align-items-center">
+              <a href={`/actividad/${proveedor._id}`} className='btn btn-amarillo'>{proveedor.nombre}</a>
+              <div className="d-flex ms-auto">
+                      <Link
+                        to={`/admin/editar-cliente/${proveedor._id}`}
+                        className="btn btn-success me-2"
+                      >
+                        Editar Cliente
+                      </Link>
+
+                      <Link
+                        to={`/admin/editar-cliente/${proveedor._id}/imagen`}
+                        className="btn btn-info"
+                      >
+                        Editar Imágenes 
+                      </Link>
+                    </div>
+            </li>
           ))}
         </ul>
       ) : (

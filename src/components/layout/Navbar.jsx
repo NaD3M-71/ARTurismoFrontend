@@ -21,7 +21,7 @@ export default function Navbar() {
                 </div>
                 <ul
                     className={`d-flex links ${clicked ? 'active mt-5': 'mt-0'}`} > 
-                    <a href="#Trabajos" className='ms-4 text-white'>Destinos</a>
+                    <a href="/destinos" className='ms-4 text-white'>Destinos</a>
                     <a href="#Nosotros" className='ms-4 text-white'>Actividades</a>
                     <a href="#Contacto" className='ms-4 text-white'>Alojamiento</a>
                     <a href="#Contacto" className='mx-4 text-white'>Gastronomia</a>
