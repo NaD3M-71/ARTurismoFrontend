@@ -3,6 +3,11 @@ body{
   color: #000;
   font-family: 'Poppins';
   overflow-x: hidden;
+  width: 100%;
+}
+
+main{
+  width: 100%;
 }
 
 .barra{
@@ -44,7 +49,7 @@ body{
 
 .index{
   display: grid;
-  height: 832px;
+  height: 620px;
   width: 100%;
   justify-content: center;
   align-content: space-evenly;
@@ -55,7 +60,7 @@ body{
 .indexCiudad{
   display: grid;
   position: relative;
-  height: 832px;
+  height: 620px;
   width: 100%;
   justify-content: center;
   align-content: space-evenly;
@@ -63,8 +68,8 @@ body{
 }
 
 .buscadorCiudad input{
-  background: #0000;
-  font-size: 42px;
+  background: #FFF5;
+  font-size: 20px;
   padding: 1rem;
   border: 2px solid #fff;
   border-radius: 50px;
@@ -186,6 +191,10 @@ body{
   opacity: 0.65;
 }
 
+.btn-contacto{
+  text-decoration: underline !important ; 
+}
+
 .vertodas{
   max-width: fit-content;
 }
@@ -203,6 +212,7 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 3rem;
 }
 
 .botonera button{
@@ -213,23 +223,43 @@ body{
   margin-left: 3rem;
 
   @media (max-width: 768px){
-    
       width: 70px;
       height: 70px;
       border-radius: 70px;
       margin-right: 0.31rem;
       margin-left: 0.31rem;
-      
-    
   }
 }
-.botonera button i{
+.botonera button img{
+  width: 40px;
   font-size: 62px;
-  @media (max-width: 768px){
-    
-    font-size: 40px;
 }
- 
+
+.botonera .social-btn {
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+  background: #fff;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.botonera .social-btn img {
+  width: 40px;
+}
+
+@media (max-width: 768px){
+  .botonera .social-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 70px;
+  }
+
+  .botonera .social-btn img {
+    width: 28px;
+  }
 }
 .tituloCard{
   height: 70px;
@@ -443,3 +473,93 @@ body{
   font-style: normal;
 }
 
+
+
+/** Botones animados de redes sociales */
+
+.social-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+}
+
+/* icono */
+.social-btn img {
+  width: 26px;
+  transition: transform 0.3s ease;
+  z-index: 2;
+}
+
+/* hover general */
+.social-btn:hover {
+  transform: translateY(-6px) scale(1.08);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+}
+
+/* efecto “burbuja” */
+.social-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+/* WHATSAPP */
+.social-btn.whatsapp:hover::before {
+  background: #25D366;
+  opacity: 1;
+}
+
+/* FACEBOOK */
+.social-btn.facebook:hover::before {
+  background: #1877F2;
+  opacity: 1;
+}
+
+/* X */
+.social-btn.twitter:hover::before {
+  background: #000;
+  opacity: 1;
+}
+
+/* INSTAGRAM (gradiente animado 🔥) */
+.social-btn.instagram::before {
+  background: linear-gradient(
+    45deg,
+    #f58529,
+    #dd2a7b,
+    #8134af,
+    #515bd4
+  );
+  background-size: 300% 300%;
+}
+
+.social-btn.instagram:hover::before {
+  opacity: 1;
+  animation: igGradient 3s linear infinite;
+}
+
+/* animación */
+@keyframes igGradient {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* pequeño zoom del icono */
+.social-btn:hover img {
+  transform: scale(1.15);
+}
+
+.social-btn:hover img {
+  filter: brightness(0) invert(1);
+}

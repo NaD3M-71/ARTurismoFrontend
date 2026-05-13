@@ -4,7 +4,7 @@ export default function AboutUs() {
   return (
     <>
         <div className='m-5'>
-            <h2 className='text-dark fw-bold text-center mb-5'>Sobre Nosotros</h2>
+            <h2 className='text-dark fw-bold text-center mb-5'>SOBRE NOSOTROS</h2>
             <div className='d-flex'>
                 <div className='col-8'>
                     <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius officiis porro voluptatum assumenda quod nesciunt optio dolor esse quis quibusdam odio blanditiis vitae sint omnis voluptatibus, voluptatem hic minus temporibus!</h4>
@@ -29,7 +29,7 @@ export default function AboutUs() {
             <div className='amarilloART p-5 d-flex flex-column align-items-center'>
                 <h4 className='text-center'>Sos prestador y querés formar parte de AR Turismo? <br></br>Contactanos directamente</h4>
                 <div>
-                    <a href="mailto:contacto@arturismo.com.ar" className='btn btn-celeste text-dark fw-bold' >ACÁ</a>
+                    <a href="mailto:somos.arturismo@gmail.com" className='btn btn-celeste text-dark fw-bold btn-contacto' >ACÁ</a>
                 </div>
             </div>
     </>

@@ -78,11 +78,11 @@ export default function NuevaCiudad() {
 
                 <div className='campo'>
                     <label className="form-label" htmlFor="nombre">Nombre</label>
-                    <input className="form-control" type="text" name="nombre" placeholder='Nombre de la Ciudad' onChange={actualizarState} />
+                    <input className="form-control" type="text" name="nombre" placeholder='Nombre de la Ciudad' onChange={actualizarState} required />
                 </div>
                 <div className='campo'>
                     <label className="form-label" htmlFor="provincia">Provincia</label>
-                    <select name="provincia" id="provincia" onChange={actualizarState} className='campo form-select'>
+                    <select name="provincia" id="provincia" onChange={actualizarState} className='campo form-select' required>
                         <option value="" disabled selected>Selecciona una provincia</option>
                         <option value="Buenos Aires">Buenos Aires</option>
                         <option value="Ciudad Autónoma de Buenos Aires">Ciudad Autónoma de Buenos Aires</option>
@@ -113,9 +113,9 @@ export default function NuevaCiudad() {
                 </div>
                 <div className='campo'>
                     <label className="form-label" htmlFor="pais">País</label>
-                    <select name="pais" id="pais" onChange={actualizarState}className='campo form-select'>
-                        <option value="" disabled >Selecciona un país</option>
-                        <option value="Argentina">Argentina</option>
+                    <select name="pais" id="pais" onChange={actualizarState} className='campo form-select' required>
+                        <option value="" disabled selected>Selecciona un país</option>
+                        <option value="Argentina" >Argentina</option>
                         <option value="Bolivia">Bolivia</option>
                         <option value="Brasil">Brasil</option>
                         <option value="Chile">Chile</option>
@@ -130,12 +130,12 @@ export default function NuevaCiudad() {
                     </select>
                 </div>
                 <div className='campo'>
-                    <label className="form-label" htmlFor="descripcion">Descripción</label>
-                    <textarea className='form-control' type="text" name="descripcion" placeholder='Ingrese una descripcion para la ciudad maximo 1000 caracteres' onChange={actualizarState} maxLength={1000}></textarea>
+                    <label className="form-label" htmlFor="descripcion">Descripción ( Hasta 1000 caracteres )</label>
+                    <textarea className='form-control' type="text" name="descripcion" placeholder='Ingrese una descripcion para la ciudad maximo 1000 caracteres' onChange={actualizarState} maxLength={1000} required></textarea>
                 </div>
                 <div className='campo'>
-                    <label className="form-label" htmlFor="descripcioncorta">Descripción Corta</label>
-                    <textarea className='form-control' type="text" name="descripcioncorta" placeholder='Ingrese una descripcion corta para la ciudad maximo 100 caracteres' onChange={actualizarState} maxLength={100}></textarea>
+                    <label className="form-label" htmlFor="descripcioncorta">Descripción Corta (100 caracteres)</label>
+                    <textarea className='form-control' type="text" name="descripcioncorta" placeholder='Ingrese una descripcion corta para la ciudad maximo 100 caracteres' onChange={actualizarState} maxLength={100} required></textarea>
                 </div>
                 <div>
                     <label htmlFor="imagen" className="form-label">Imagen</label>
@@ -144,6 +144,7 @@ export default function NuevaCiudad() {
                     id="imagen" 
                     type="file" 
                     onChange={leerArchivo}  // Asegúrate de agregar el onChange aquí
+                    required
                     />
                 </div>
 

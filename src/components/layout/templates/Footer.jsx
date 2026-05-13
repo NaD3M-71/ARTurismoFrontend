@@ -1,36 +1,62 @@
-import React from 'react'
+import React from "react";
 
 export default function Footer() {
-const añoDesdeNow = new Date(Date.now()).getFullYear();
+  const añoDesdeNow = new Date(Date.now()).getFullYear();
   return (
     <>
-        <div className='celesteART p-5 d-flex text-white'>
-            <div className='col-1 d-none d-md-block'>
-                <img src="/assets/Artboard4.svg" alt="" className=''/>
+      <div className="celesteART p-4">
+        <div className="container">
+          <div className="row text-white align-items-center">
+            {/* Columna izquierda - Logo (visible solo en desktop) */}
+            <div className="col-12 col-md-3 text-center text-md-start mb-3 mb-md-0 d-none d-md-block">
+              <img
+                src="/assets/Artboard4.svg"
+                alt="Logo ARTurismo"
+                className="img-fluid"
+                style={{ maxWidth: "120px" }}
+              />
             </div>
-            <div className='col-11 d-flex justify-content-end sm-justify-content-center'>
 
-                
-                <div className='col-2'>
-                    <div className='text-center'>Ver</div>
-                    <div className='text-center' >Sobre Nosotros</div>
-                    <div className='text-center' >Sobre Nosotros</div>
-                    <div className='text-center' >Sobre Nosotros</div>
-                </div>
-                <div className='col-2'>
-                    <div className='text-center'>Ver</div>
-                    <div className='text-center' >Sobre Nosotros</div>
-                    <div className='mt-3'>
-                        <img src="/assets/whatsapp1.svg" alt="Logo Whatsapp" className='me-2' />
-                        <img src="/assets/Instagram.svg" alt="Logo Instagram" className='mx-2' />
-                        <img src="/assets/X.svg" alt="Logo X"  className='mx-2'/>
-                        <img src="/assets/Facebook.svg" alt="Logo Facebook"  className='mx-2'/>
-                    </div>
-                </div>
-                
+            {/* Columna central - Sobre Nosotros */}
+            <div className="col-12 col-md-6 text-center mb-3 mb-md-0">
+              <h5 className="fw-bold mb-3">Sobre Nosotros</h5>
+              <div className="d-flex flex-column gap-2">
+                <a href="/biografia" className="text-white text-decoration-none">
+                  Quiénes somos
+                </a>
+                <a href="#" className="text-white text-decoration-none">
+                  Contacto
+                </a>
+                <a href="#" className="text-white text-decoration-none">
+                  Términos y condiciones
+                </a>
+              </div>
             </div>
+
+            {/* Columna derecha - Redes sociales */}
+            <div className="col-12 col-md-3 text-center">
+              <h5 className="fw-bold mb-3">Síguenos</h5>
+              <div className="d-flex justify-content-center gap-3">
+                <a href="#" className="social-btn whatsapp" title="WhatsApp">
+                  <img src="/assets/whatsapp1.svg" alt="Logo Whatsapp" />
+                </a>
+                <a href="#" className="social-btn instagram" title="Instagram">
+                  <img src="/assets/Instagram.svg" alt="Logo Instagram" />
+                </a>
+                <a href="#" className="social-btn twitter" title="X">
+                  <img src="/assets/X.svg" alt="Logo X" />
+                </a>
+                <a href="#" className="social-btn facebook" title="Facebook">
+                  <img src="/assets/Facebook.svg" alt="Logo Facebook" />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-        <p className='celesteART text-white text-center m-0'>@{añoDesdeNow} ARTurismo - Todos los derechos reservados</p>
+      </div>
+      <p className="celesteART text-white text-center m-0 py-3">
+        © {añoDesdeNow} ARTurismo - Todos los derechos reservados
+      </p>
     </>
-  )
+  );
 }

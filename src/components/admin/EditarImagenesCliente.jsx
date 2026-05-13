@@ -7,6 +7,7 @@ export default function EditarImagenesCliente() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [cliente, setCliente] = useState([]);
   const [imagenes, setImagenes] = useState([]);
   const [imagenesNuevas, setImagenesNuevas] = useState([]);
 
@@ -14,6 +15,7 @@ export default function EditarImagenesCliente() {
     const cargarImagenes = async () => {
       try {
         const { data } = await clienteAxios.get(`/clientes/${id}`);
+        setCliente(data);
         setImagenes(data.imagen || []);
       } catch {
         Swal.fire("Error", "No se pudieron cargar imágenes", "error");
@@ -69,7 +71,7 @@ export default function EditarImagenesCliente() {
 
   return (
     <div className="m-5">
-      <h2>Editar Imágenes</h2>
+      <h2>Editar Imágenes de {cliente.nombre}</h2>
 
       <div className="d-flex flex-wrap gap-3 mb-4">
         {imagenes.map((img) => (

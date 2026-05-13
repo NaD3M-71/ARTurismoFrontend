@@ -16,7 +16,9 @@ import VerProveedores from './components/admin/Proveedores';
 import Actividad from './components/layout/ciudad/Actividad';
 import Ciudades from './components/layout/ciudad/Ciudades';
 import EditarCliente from './components/admin/EditarCliente';
+import EditarCiudad from './components/admin/EditarCiudad';
 import EditarImagenesCliente from './components/admin/EditarImagenesCliente';
+import Biografia from './components/layout/biografias/Biografia';
 
 
 
@@ -27,7 +29,7 @@ function App() {
     <Router>
       <>
         <Header></Header>
-        <main className='container '>
+        <main className=''>
           <Routes>
             <Route exact path='/' element={<Index/>}></Route>
             <Route exact path='/ciudad/:id' element={<Ciudad ciudad />}></Route>
@@ -40,8 +42,10 @@ function App() {
             <Route exact path='/admin/agregar-ciudad' element={<NuevaCiudad />}></Route>
             <Route exact path='/admin/agregar-cliente' element={<NuevoCliente />}></Route>
             <Route exact path='/admin/editar-cliente/:id' element={<EditarCliente />}></Route>
+            <Route exact path='/admin/editar-ciudad/:id' element={<EditarCiudad />}></Route>
             <Route exact path='/admin/editar-cliente/:id/imagen' element={<EditarImagenesCliente />}></Route>
             <Route exact path='/admin/ver-proveedores/:ciudadNombre' element={<VerProveedores proveedores/>}></Route>
+            <Route path="/biografia" element={<Biografia />} />
             
 
           </Routes>

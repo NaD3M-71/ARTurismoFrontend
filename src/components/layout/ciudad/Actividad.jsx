@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import clienteAxios from "../../../config/axios";
+import "trix/dist/trix.css";
 
 export default function Actividad() {
   const { id } = useParams();
@@ -43,7 +44,10 @@ export default function Actividad() {
 
       {/* Carrusel de imágenes */}
       {actividad.imagen && actividad.imagen.length > 0 ? (
-        <div id="carouselExampleIndicators" className="carousel slide m-5">
+        <div
+          id="carouselExampleIndicators"
+          className="carousel slide container mb-5"
+        >
           <div className="carousel-indicators">
             {actividad.imagen.slice(0, 5).map((_, index) => (
               <button
@@ -60,7 +64,16 @@ export default function Actividad() {
           <div className="carousel-inner">
             {actividad.imagen.slice(0, 5).map((imagen, index) => (
               <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
-                <img src={`${import.meta.env.VITE_BACKEND_URL}/uploads/${actividad.imagen[index]}`} className="d-block w-100 h-100 col-9" alt={`Imagen ${index + 1}`} />
+                <img
+                  src={`${import.meta.env.VITE_BACKEND_URL}/uploads/${imagen}`}
+                  className="d-block w-100 img-fluid rounded"
+                  alt={`Imagen ${index + 1}`}
+                  style={{
+                    height: "500px",
+                    objectFit: "contain",
+                    objectPosition: "center"
+                  }}
+                />
               </div>
             ))}
           </div>
@@ -92,7 +105,12 @@ export default function Actividad() {
       </div>
       <div className="m-5 flex-column">
         <h2 className="subtitulo fw-bold mb-5">Información</h2>
-        <p className="texto">{actividad.informacion}</p>
+        <div
+          className="texto"
+          dangerouslySetInnerHTML={{
+            __html: actividad.informacion
+          }}
+        />
         <div className="d-sm-flex d-block" style={{height: 450}}>
           <div className="datos col-6 ">
             <h5 className="text-center fw-bold m-5">Datos</h5>
@@ -101,7 +119,7 @@ export default function Actividad() {
             <h6 className="m-3 text-center">{actividad.direccion}</h6>
             <h6 className="m-3 text-center">{actividad.url}</h6>
             <div className="d-flex justify-content-center redes">
-              <a className="m-3 text-dark" href={`https://wa.me/${actividad.whatsapp}?text=Te%20escribo%20desde%20ARTurismo%20para%20hacerte%20una%20consulta:%20`}>
+              <a className="m-3 text-dark" href={`https://wa.me/${actividad.telefono}?text=Te%20escribo%20desde%20ARTurismo%20para%20hacerte%20una%20consulta:%20`}>
                 <i className="bi bi-whatsapp"></i>
               </a>
               <a className="m-3 text-dark" href={`https://instagram.com/${actividad.instagram}`}>

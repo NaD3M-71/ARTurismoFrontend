@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import clienteAxios from "../../config/axios";
 import Swal from 'sweetalert2';
-
+import "trix/dist/trix.css";
+import Trix from "trix";
 export default function AgregarCliente() {
   const [searchParams] = useSearchParams();
   const ciudadId = searchParams.get("ciudadId");
@@ -97,10 +98,6 @@ export default function AgregarCliente() {
 		}
 	}
 
-
-
-
-
   return (
     <div className="m-5">
       <h2>Agregar Cliente a la Ciudad: {ciudadNombre || "Desconocida"}</h2>
@@ -115,32 +112,76 @@ export default function AgregarCliente() {
                 </div>
                 <div className='campo'>
                     <label className="form-label" htmlFor="nombre">Ciudad</label>
-                    <input className="form-control" type="text" name="nombre" value={`${ciudadNombre}`} onChange={actualizarState} />
+                    <input className="form-control" type="text" name="nombre" value={`${ciudadNombre}`} onChange={actualizarState} disabled/>
                 </div>
                 <div className='campo'>
                     <label className="form-label" htmlFor="direccion">Dirección</label>
-                    <input className="form-control" type="text" name="direccion" onChange={actualizarState} />
+                    <input className="form-control" type="text" name="direccion" onChange={actualizarState} required/>
                 </div>
 								<input type="hidden" name="ciudad_id" value={`${ciudadNombre}`} />
                 <div className='campo'>
-                    <label className="form-label" htmlFor="categoria">Categoría</label>
-                    <select name="categoria" id="categoria" onChange={actualizarState} className='campo form-select'>
-                        <option value="" disabled selected >Selecciona una Categoría</option>
-                        <option value="Gastronomía">Gastronomía</option>
-                        <option value="Hospedaje">Hospedaje</option>
-                        <option value="Entretenimiento">Entretenimiento</option>
-                        <option value="Servicios">Servicios</option>
-                        <option value="Punto de Interés">Punto de Interés</option>
-                        <option value="Otro">Otro</option>
-                    </select>
+                  <label className="form-label" htmlFor="categoria">
+                    Categoría
+                  </label>
+
+                  <select
+                    name="categoria"
+                    id="categoria"
+                    onChange={actualizarState}
+                    className='campo form-select'
+                    required
+                  >
+                    <option value="" disabled selected>
+                      Selecciona una Categoría
+                    </option>
+
+                    <optgroup label="Gastronomía">
+                      <option value="Restaurantes">Restaurantes</option>
+                      <option value="Chocolaterías">Chocolaterías</option>
+                      <option value="Cervecerías">Cervecerías</option>
+                      <option value="Heladerías">Heladerías</option>
+                      <option value="Confiterías">Confiterías</option>
+                    </optgroup>
+
+                    <optgroup label="Alojamiento">
+                      <option value="Departamentos">Departamentos</option>
+                      <option value="Cabañas">Cabañas</option>
+                      <option value="Hostel">Hostel</option>
+                      <option value="Hoteles">Hoteles</option>
+                    </optgroup>
+
+                    <optgroup label="Transportes">
+                      <option value="RentaCar">Rent a Car</option>
+                      <option value="Taxis">Taxis</option>
+                      <option value="Remises">Remises</option>
+                      <option value="Combis">Combis</option>
+                      <option value="Colectivos">Colectivos</option>
+                    </optgroup>
+
+                    <optgroup label="ComerciosExtras">
+                      <option value="Farmacias">Farmacias</option>
+                      <option value="EstacionesDeServicio">
+                        Estaciones de Servicio
+                      </option>
+                    </optgroup>
+
+                    <optgroup label="Vida Nocturna">
+                      <option value="Cervecerías">
+                        Cervecerías
+                      </option>
+                      <option value="Boliches">Boliches</option>
+                      <option value="Clubs">Clubs</option>
+                    </optgroup>
+
+                  </select>
                 </div>
                 <div className='campo'>
                     <label className="form-label" htmlFor="email">Email</label>
-                    <input className="form-control" type="email" name="email" placeholder='Email del Proveedor' onChange={actualizarState} />
+                    <input className="form-control" type="email" name="email" placeholder='Email del Proveedor' onChange={actualizarState} required />
                 </div>
                 <div className='campo'>
                     <label className="form-label" htmlFor="telefono">Teléfono</label>
-                    <input className="form-control" type="tel" name="telefono" placeholder='Teléfono del Proveedor' onChange={actualizarState} />
+                    <input className="form-control" type="tel" name="telefono" placeholder='Teléfono del Proveedor' onChange={actualizarState}  />
                 </div>
                 <div className='campo'>
                     <label className="form-label" htmlFor="telefono">Redes Sociales</label>
@@ -164,17 +205,37 @@ export default function AgregarCliente() {
 										</div>
                 </div>
                 <div className='campo'>
-                    <label className="form-label" htmlFor="descripcion">Descripción</label>
-                    <textarea className='form-control' type="text" name="descripcion" placeholder='Ingrese una descripcion para la ciudad maximo 1000 caracteres' onChange={actualizarState} maxLength={1000}></textarea>
+                    <label className="form-label" htmlFor="descripcionCorta">Descripción corta (para la card)</label>
+                    <textarea className='form-control' type="text" name="descripcionCorta" placeholder='Ingrese una descripcion para la ciudad maximo 100 caracteres' onChange={actualizarState} maxLength={100} required></textarea>
                 </div>
                 <div className='campo'>
-                    <label className="form-label" htmlFor="informacion">Información</label>
-                    <textarea className='form-control' type="text" name="informacion" placeholder='Ingrese una descripcion corta para la ciudad maximo 100 caracteres sobre el lugar donde se encuentra el proveedor' onChange={actualizarState} maxLength={100}></textarea>
+                    <label className="form-label" htmlFor="descripcion">Descripción</label>
+                    <textarea className='form-control' type="text" name="descripcion" placeholder='Ingrese una descripcion para la ciudad maximo 1000 caracteres' onChange={actualizarState} maxLength={1000} required></textarea>
+                </div>
+                <div className='campo'>
+                  <label className="form-label" htmlFor="informacion">
+                    Información Completa
+                  </label>
+                  <input
+                    id="informacion"
+                    type="hidden"
+                    value={cliente.informacion || ""}
+                  />
+
+                  <trix-editor
+                    input="informacion"
+                    onInput={(e) =>
+                      guardarCliente({
+                        ...cliente,
+                        informacion: e.target.innerHTML
+                      })
+                    }
+                  />
                 </div>
 								<div className="campo">
 									<label htmlFor="tier" className="form-label">Clasificación</label>
-									<select name="tier" className="form-select" id="tier" onChange={actualizarState} >
-										<option value="I" selected>Free</option>
+									<select name="tier" className="form-select" id="tier" onChange={actualizarState} defaultValue={"I"} required>
+										<option value="I" >Free</option>
 										<option value="II">Basic</option>
 										<option value="III">Premium</option>
 									</select>
@@ -186,7 +247,7 @@ export default function AgregarCliente() {
                     id="imagen" 
                     type="file" 
 										multiple
-                    onChange={leerArchivo}  // Asegúrate de agregar el onChange aquí
+                    onChange={leerArchivo}  
                     />
                 </div>
 

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import clienteAxios from "../../config/axios";
 import Swal from "sweetalert2";
-
+import "trix/dist/trix.css";
+import Trix from "trix";
 export default function EditarCliente() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -128,21 +129,60 @@ export default function EditarCliente() {
           />
         </div>
 
-        <div className="campo">
-          <label className="form-label">Categoría</label>
+        <div className='campo'>
+          <label className="form-label" htmlFor="categoria">
+            Categoría
+          </label>
+
           <select
             name="categoria"
-            className="form-select"
-            value={cliente.categoria || ""}
+            id="categoria"
             onChange={actualizarState}
+            className='campo form-select'
+            required
           >
-            <option value="">Seleccionar</option>
-            <option value="Gastronomía">Gastronomía</option>
-            <option value="Hospedaje">Hospedaje</option>
-            <option value="Entretenimiento">Entretenimiento</option>
-            <option value="Servicios">Servicios</option>
-            <option value="Punto de Interés">Punto de Interés</option>
-            <option value="Otro">Otro</option>
+            <option value="" disabled selected>
+              Selecciona una Categoría
+            </option>
+
+            <optgroup label="Gastronomía">
+              <option value="Restaurantes">Restaurantes</option>
+              <option value="Chocolaterías">Chocolaterías</option>
+              <option value="Cervecerías">Cervecerías</option>
+              <option value="Heladerías">Heladerías</option>
+              <option value="Confiterías">Confiterías</option>
+            </optgroup>
+
+            <optgroup label="Alojamiento">
+              <option value="Departamentos">Departamentos</option>
+              <option value="Cabañas">Cabañas</option>
+              <option value="Hostel">Hostel</option>
+              <option value="Hoteles">Hoteles</option>
+            </optgroup>
+
+            <optgroup label="Transportes">
+              <option value="Rent a Car">Rent a Car</option>
+              <option value="Taxis">Taxis</option>
+              <option value="Remises">Remises</option>
+              <option value="Combis">Combis</option>
+              <option value="Colectivos">Colectivos</option>
+            </optgroup>
+
+            <optgroup label="Comercios Extras">
+              <option value="Farmacias">Farmacias</option>
+              <option value="Estaciones de Servicio">
+                Estaciones de Servicio
+              </option>
+            </optgroup>
+
+            <optgroup label="Vida Nocturna">
+              <option value="Cervecerías Nocturnas">
+                Cervecerías
+              </option>
+              <option value="Boliches">Boliches</option>
+              <option value="Clubs">Clubs</option>
+            </optgroup>
+
           </select>
         </div>
 
@@ -167,7 +207,10 @@ export default function EditarCliente() {
             onChange={actualizarState}
           />
         </div>
-
+        <div className='campo'>
+            <label className="form-label" htmlFor="descripcionCorta">Descripción corta (para la card)</label>
+            <textarea className='form-control' type="text" name="descripcionCorta" placeholder='Ingrese una descripcion para la ciudad maximo 100 caracteres' onChange={actualizarState} maxLength={100} required></textarea>
+        </div>
         <div className="campo">
           <label className="form-label">Descripción</label>
           <textarea
@@ -179,16 +222,26 @@ export default function EditarCliente() {
           />
         </div>
 
-        <div className="campo">
-          <label className="form-label">Información</label>
-          <textarea
-            className="form-control"
-            name="informacion"
-            maxLength={100}
-            value={cliente.informacion || ""}
-            onChange={actualizarState}
-          />
-        </div>
+        <div className='campo'>
+                  <label className="form-label" htmlFor="informacion">
+                    Información Completa
+                  </label>
+                  <input
+                    id="informacion"
+                    type="hidden"
+                    value={cliente.informacion || ""}
+                  />
+
+                  <trix-editor
+                    input="informacion"
+                    onInput={(e) =>
+                      guardarCliente({
+                        ...cliente,
+                        informacion: e.target.innerHTML
+                      })
+                    }
+                  />
+                </div>
 
         <div className="campo">
           <label className="form-label">Clasificación</label>

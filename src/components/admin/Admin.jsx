@@ -30,7 +30,7 @@ export default function Admin() {
   return (
     <>
       <div className="text-center">
-        <h1>Admin</h1>
+        <h1>Panel de Administración</h1>
       </div>
 
       {/* Botón para agregar ciudad */}
@@ -56,12 +56,19 @@ export default function Admin() {
                       >
                         Agregar Cliente
                       </Link>
+                      
 
                       <Link
                         to={`/admin/ver-proveedores/${encodeURIComponent(ciudad.nombre)}`}
                         className="btn btn-info"
                       >
                         Ver Proveedores
+                      </Link>
+                      <Link
+                        to={`/admin/editar-ciudad/${encodeURIComponent(ciudad._id)}`}
+                        className="btn btn-primary mx-2"
+                      >
+                        Modificar Ciudad
                       </Link>
                     </div>
                   </li>
