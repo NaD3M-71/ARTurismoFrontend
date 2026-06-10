@@ -18,6 +18,7 @@ import EditarImagenesCliente from './components/admin/EditarImagenesCliente';
 import Biografia from './components/layout/biografias/Biografia';
 import QuienesSomos from './components/layout/biografias/QuienesSomos';
 import Busqueda from './components/layout/Busqueda';
+import Actividades from './components/layout/Actividades';
 import Login from './components/auth/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import GestionUsuarios from './components/admin/GestionUsuarios';
@@ -40,9 +41,11 @@ function App() {
             <Route exact path='/' element={<Index/>}></Route>
             <Route exact path='/ciudad/:id' element={<Ciudad ciudad />}></Route>
             <Route exact path='/ciudades' element={<Ciudades />}></Route>
+            <Route exact path='/destinos' element={<Ciudades />}></Route>
             <Route exact path='/actividad/:id' element={<Actividad actividad />}></Route>
             <Route exact path='/login' element={<Login />}></Route>
             <Route exact path='/busqueda' element={<Busqueda />}></Route>
+            <Route exact path='/actividades' element={<Actividades />}></Route>
             <Route path="/biografia" element={<Biografia />} />
             <Route path="/quienes-somos" element={<QuienesSomos />} />
             <Route path="/formulario-proveedor" element={<FormularioProveedor />} />

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import BurguerButton from './BurguerButton'
 import { useAuth } from '../../hooks/useAuth'
@@ -9,6 +9,8 @@ export default function Navbar() {
   const [clicked, setClicked] = useState(false)
   const { isAuthenticated, logout, getUsuario } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const enCiudad = location.pathname.startsWith('/ciudad/')
 
   const handleClick = () => {
     setClicked(!clicked)
@@ -36,19 +38,22 @@ export default function Navbar() {
           {/* Menu Desktop */}
           <ul className="d-none d-sm-flex align-items-center links-desktop mb-0">
             <a href="/destinos" className='nav-link text-white'>Destinos</a>
-            <a href="#Nosotros" className='nav-link text-white'>Actividades</a>
-            <a href="#Contacto" className='nav-link text-white'>Alojamiento</a>
-            <a href="#Contacto" className='nav-link text-white'>Gastronomía</a>
-
-            <div className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
-                Más
-              </a>
-              <ul className="dropdown-menu celesteART">
-                <li><a className="dropdown-item text-white" href="#">Excursiones</a></li>
-                <li><a className="dropdown-item text-white" href="#">Transporte</a></li>
-              </ul>
-            </div>
+            {enCiudad && (
+              <>
+                <a href="#actividades" className='nav-link text-white'>Actividades</a>
+                <a href="#alojamiento" className='nav-link text-white'>Alojamiento</a>
+                <a href="#gastronomia" className='nav-link text-white'>Gastronomía</a>
+                <div className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                    Más
+                  </a>
+                  <ul className="dropdown-menu celesteART">
+                    <li><a className="dropdown-item text-white" href="#atractivos">Excursiones</a></li>
+                    <li><a className="dropdown-item text-white" href="#transportes">Transporte</a></li>
+                  </ul>
+                </div>
+              </>
+            )}
 
             {isAuthenticated() && (
               <div className="nav-item dropdown ms-3">
@@ -80,11 +85,15 @@ export default function Navbar() {
           <div className="menu-mobile d-flex flex-column align-items-center justify-content-center">
 
             <a href="/destinos" className='btn btn-link text-dark fs-4 mb-2'>Destinos</a>
-            <a href="#Nosotros" className='btn btn-link text-dark fs-4 mb-2'>Actividades</a>
-            <a href="#Contacto" className='btn btn-link text-dark fs-4 mb-2'>Alojamiento</a>
-            <a href="#Contacto" className='btn btn-link text-dark fs-4 mb-2'>Gastronomía</a>
-            <a className="btn btn-link text-dark fs-4 mb-2" href="#">Excursiones</a>
-            <a className="btn btn-link text-dark fs-4 mb-2" href="#">Transporte</a>
+            {enCiudad && (
+              <>
+                <a href="#actividades" className='btn btn-link text-dark fs-4 mb-2'>Actividades</a>
+                <a href="#alojamiento" className='btn btn-link text-dark fs-4 mb-2'>Alojamiento</a>
+                <a href="#gastronomia" className='btn btn-link text-dark fs-4 mb-2'>Gastronomía</a>
+                <a className="btn btn-link text-dark fs-4 mb-2" href="#atractivos">Excursiones</a>
+                <a className="btn btn-link text-dark fs-4 mb-2" href="#transportes">Transporte</a>
+              </>
+            )}
 
             {isAuthenticated() && (
               <>

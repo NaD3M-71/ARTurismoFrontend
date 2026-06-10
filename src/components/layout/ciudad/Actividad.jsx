@@ -17,7 +17,6 @@ export default function Actividad() {
       try {
         const { data } = await clienteAxios.get(`/clientes/${id}`);
         setActividad(data);
-        console.log(data);
       } catch (error) {
         setError(true);
       }

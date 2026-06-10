@@ -21,6 +21,7 @@ export default function EditarCliente() {
     url: "",
     whatsapp: "",
     x: "",
+    descripcionCorta: "",
     descripcion: "",
     informacion: "",
     lat: "",
@@ -33,6 +34,8 @@ export default function EditarCliente() {
   const mapPickerRef = useRef(null);
   const mapPickerInstanceRef = useRef(null);
   const markerRef = useRef(null);
+  const informacionInputRef = useRef(null);
+  const trixEditorRef = useRef(null);
   const initialCoordsSet = useRef(false);
 
   useEffect(() => {
@@ -114,6 +117,13 @@ export default function EditarCliente() {
       [e.target.name]: e.target.value,
     });
   };
+
+  // Sincronizar contenido del editor Trix cuando se carga el cliente
+  useEffect(() => {
+    if (!trixEditorRef.current) return;
+    if (cliente.informacion === undefined) return;
+    trixEditorRef.current?.editor?.loadHTML(cliente.informacion || "");
+  }, [cliente.informacion]);
 
   // Leer imágenes
   const leerArchivo = (e) => {
@@ -248,10 +258,19 @@ export default function EditarCliente() {
         </div>
         <div className='campo'>
             <label className="form-label" htmlFor="descripcionCorta">Descripción corta (para la card)</label>
-            <textarea className='form-control' type="text" name="descripcionCorta" placeholder='Ingrese una descripcion para la ciudad maximo 100 caracteres' onChange={actualizarState} maxLength={100} required></textarea>
+            <textarea
+              className='form-control'
+              type="text"
+              name="descripcionCorta"
+              value={cliente.descripcionCorta || ""}
+              placeholder='Ingrese una descripcion para la ciudad maximo 100 caracteres'
+              onChange={actualizarState}
+              maxLength={100}
+              required
+            ></textarea>
         </div>
         <div className="campo">
-          <label className="form-label">Descripción</label>
+          <label className="form-label">Descripción(¿Qué es?¿Su historia?)</label>
           <textarea
             className="form-control"
             name="descripcion"
@@ -263,15 +282,17 @@ export default function EditarCliente() {
 
         <div className='campo'>
                   <label className="form-label" htmlFor="informacion">
-                    Información Completa
+                    Información Completa (Servicios que ofrece, horarios, precios, etc. Se pueden utilizar emojis y formato de texto)
                   </label>
                   <input
                     id="informacion"
                     type="hidden"
+                    ref={informacionInputRef}
                     value={cliente.informacion || ""}
                   />
 
                   <trix-editor
+                    ref={trixEditorRef}
                     input="informacion"
                     onInput={(e) =>
                       guardarCliente({

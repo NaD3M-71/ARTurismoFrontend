@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import clienteAxios from "../../config/axios";
 import Swal from "sweetalert2";
 
-const GRUPOS = ["Gastronomía", "Alojamiento", "Transportes", "Vida Nocturna", "Otros"];
+const GRUPOS = ["Gastronomía", "Alojamiento", "Transportes", "Vida Nocturna", "Atractivos", "Servicios", "Otros"];
 
 export default function GestionCategorias() {
   const navigate = useNavigate();

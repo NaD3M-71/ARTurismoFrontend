@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// Axios
 import clienteAxios from '../../config/axios';
 import Card from './templates/CardCiudades';
 import CarouselSwipper  from './templates/CarouselSwipper';
@@ -15,14 +14,27 @@ export default function Index() {
   const [actividades, guardarActividades] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [bannerUrl, setBannerUrl] = useState(BANNER_FALLBACK);
+  const [textos, setTextos] = useState({
+    titulo_banner: 'Recorré Argentina de la mejor manera!',
+    aboutus_titulo: 'TU AVENTURA EMPIEZA AQUÍ',
+    aboutus_cuerpo: ''
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
     const consultarAPI = async () => {
       try {
-        const { data: dataCiudades } = await clienteAxios.get('/ciudades');
-        const { data: dataClientes } = await clienteAxios.get('/clientes');
-        const { data: dataBanner } = await clienteAxios.get('/configuracion/banner');
+        const [
+          { data: dataCiudades },
+          { data: dataClientes },
+          { data: dataBanner },
+          { data: dataTextos }
+        ] = await Promise.all([
+          clienteAxios.get('/ciudades'),
+          clienteAxios.get('/clientes'),
+          clienteAxios.get('/configuracion/banner'),
+          clienteAxios.get('/configuracion/textos-inicio')
+        ]);
 
         guardarCiudades(dataCiudades);
         guardarActividades(dataClientes);
@@ -30,6 +42,7 @@ export default function Index() {
         if (dataBanner.banner) {
           setBannerUrl(`${BACKEND_URL}/uploads/${dataBanner.banner}`);
         }
+        setTextos(dataTextos);
       } catch (error) {
         console.log(error);
       }
@@ -49,7 +62,7 @@ export default function Index() {
         ></div>
         <h1 className='titulo d-none position-relative'>ARTurismo</h1>
         <img className='position-relative' src="/assets/Artboard14.svg" alt=""  width={200} />
-        <h2 className='titulo fw-bold text-white position-relative text-lg'>Recorré Argentina de la mejor manera!</h2>
+        <h2 className='titulo fw-bold text-white position-relative text-lg'>{textos.titulo_banner}</h2>
 
         <form
           onSubmit={(e) => {
@@ -98,32 +111,23 @@ export default function Index() {
           <a href="#" className='social-btn twitter' title='X'>
             <img src="/assets/X.svg" alt="X" />
           </a>
-
-
         </div>
       </div>
       <div className='destacados actividadesDestacadas d-flex justify-content-center row m-5'>
-        {/* Sección Ciudades Destacadas con Swiper */}
-
           <h3 className="text-dark text-center fw-bold">CIUDADES DESTACADAS</h3>
           <CarouselCiudades ciudades={ciudades} />
           <a href="/ciudades" className="btn btn-celeste vertodas">
             Ver Todas
           </a>
-
       </div>
       <div className='actividadesDestacadas destacados d-flex justify-content-center row m-5'>
           <h3 className='text-dark text-center fw-bold'>ACTIVIDADES DESTACADAS</h3>
           <div className=' d-flex justify-content-center'>
-
             <CarouselSwipper actividades={actividades}></CarouselSwipper>
-
-
-        </div>
+          </div>
         <a href="/actividades" className='btn btn-celeste vertodas'> Ver Todas</a>
       </div>
-      <AboutUs></AboutUs>
-
+      <AboutUs titulo={textos.aboutus_titulo} cuerpo={textos.aboutus_cuerpo} />
     </>
   );
 }

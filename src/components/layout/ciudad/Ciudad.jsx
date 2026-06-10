@@ -1,20 +1,46 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import clienteAxios from "../../../config/axios";
 import CarouselSwipper from "../templates/CarouselSwipper";
+import CardActividad from "../templates/CardActividades";
 import LoadingScreen from "../templates/LoadingScreen";
 import NotFound from "../NotFound";
 
-const ORDEN_GRUPOS = ["Gastronomía", "Alojamiento", "Transportes", "Vida Nocturna", "Otros"];
+const ORDEN_GRUPOS = ["Gastronomía", "Alojamiento", "Transportes", "Vida Nocturna", "Atractivos", "Servicios", "Otros"];
+const CAROUSEL_LIMIT = 8;
+
+const GRUPO_IDS = {
+  "Gastronomía": "gastronomia",
+  "Alojamiento": "alojamiento",
+  "Transportes": "transportes",
+  "Vida Nocturna": "vida-nocturna",
+  "Atractivos": "atractivos",
+  "Servicios": "servicios",
+  "Otros": "otros",
+};
 
 export default function Ciudad() {
 
   const [ciudad, setCiudad] = useState(null);
   const [actividades, setActividades] = useState([]);
   const [actividadesPorGrupo, setActividadesPorGrupo] = useState({});
+  const [gruposExpandidos, setGruposExpandidos] = useState({});
   const [error, setError] = useState(false);
 
   const { id } = useParams();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!Object.keys(actividadesPorGrupo).length) return;
+    const hash = decodeURIComponent(window.location.hash.replace('#', ''));
+    if (!hash) return;
+    const grupoMatch = ORDEN_GRUPOS.find(g => GRUPO_IDS[g] === hash);
+    if (!grupoMatch) return;
+    setGruposExpandidos(prev => ({ ...prev, [grupoMatch]: true }));
+    setTimeout(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
+    }, 150);
+  }, [location.hash, actividadesPorGrupo]);
 
   useEffect(() => {
 
@@ -63,6 +89,10 @@ export default function Ciudad() {
     consultarAPI();
 
   }, [id]);
+
+  const toggleGrupo = (grupo) => {
+    setGruposExpandidos(prev => ({ ...prev, [grupo]: !prev[grupo] }));
+  };
 
   if (error) return <NotFound />;
   if (!ciudad) return <LoadingScreen />;
@@ -120,7 +150,7 @@ export default function Ciudad() {
         </h3>
       </div>
 
-      <div className="container">
+      <div className="container" id="actividades">
 
         <h3 className="my-5">
           Actividades en {ciudad.nombre}
@@ -134,26 +164,56 @@ export default function Ciudad() {
       </div>
 
       {/* SECCIONES POR GRUPO — solo muestra los grupos que tienen proveedores */}
-      {ORDEN_GRUPOS.filter(grupo => actividadesPorGrupo[grupo]?.length > 0).map(grupo => (
+      {ORDEN_GRUPOS.filter(grupo => actividadesPorGrupo[grupo]?.length > 0).map(grupo => {
+        const items = actividadesPorGrupo[grupo];
+        const expandido = !!gruposExpandidos[grupo];
+        const tieneExtra = items.length > CAROUSEL_LIMIT;
 
-        <div key={grupo}>
+        return (
+          <div key={grupo} id={GRUPO_IDS[grupo]}>
 
-          <div className="amarilloART text-center py-5 mt-5">
-            <h3 className="fw-bold">
-              {grupo} en <br /> {ciudad.nombre}
-            </h3>
+            <div className="amarilloART text-center py-5 mt-5">
+              <h3 className="fw-bold">
+                {grupo} en <br /> {ciudad.nombre}
+              </h3>
+            </div>
+
+            <div className="container">
+
+              {expandido ? (
+                // Grilla completa con todas las opciones
+                <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 my-3">
+                  {items.map(actividad => (
+                    <div className="col d-flex" key={actividad._id}>
+                      <CardActividad data={actividad} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <CarouselSwipper
+                  actividades={items}
+                  ciudadId={ciudad._id}
+                />
+              )}
+
+              {tieneExtra && (
+                <div className="text-center my-4">
+                  <button
+                    className="btn btn-outline-dark px-5"
+                    onClick={() => toggleGrupo(grupo)}
+                  >
+                    {expandido
+                      ? `Ver menos ${grupo.toLowerCase()}`
+                      : `Ver todos en ${grupo} (${items.length})`}
+                  </button>
+                </div>
+              )}
+
+            </div>
+
           </div>
-
-          <div className="container">
-            <CarouselSwipper
-              actividades={actividadesPorGrupo[grupo]}
-              ciudadId={ciudad._id}
-            />
-          </div>
-
-        </div>
-
-      ))}
+        );
+      })}
 
     </>
   );

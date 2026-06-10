@@ -200,7 +200,7 @@ export default function AgregarCliente() {
                 </div>
                 <div className='campo'>
                     <label className="form-label" htmlFor="email">Email</label>
-                    <input className="form-control" type="email" name="email" placeholder='Email del Proveedor' onChange={actualizarState} required />
+                    <input className="form-control" type="email" name="email" placeholder='Email del Proveedor' onChange={actualizarState} />
                 </div>
                 <div className='campo'>
                     <label className="form-label" htmlFor="telefono">Teléfono</label>
@@ -232,12 +232,12 @@ export default function AgregarCliente() {
                     <textarea className='form-control' type="text" name="descripcionCorta" placeholder='Ingrese una descripcion para la ciudad maximo 100 caracteres' onChange={actualizarState} maxLength={100} required></textarea>
                 </div>
                 <div className='campo'>
-                    <label className="form-label" htmlFor="descripcion">Descripción</label>
+                    <label className="form-label" htmlFor="descripcion">Descripción (¿Qué es?¿Su historia?)</label>
                     <textarea className='form-control' type="text" name="descripcion" placeholder='Ingrese una descripcion para la ciudad maximo 1000 caracteres' onChange={actualizarState} maxLength={1000} required></textarea>
                 </div>
                 <div className='campo'>
                   <label className="form-label" htmlFor="informacion">
-                    Información Completa
+                    Información Completa (Servicios que ofrece, horarios, precios, etc. Se pueden utilizar emojis y formato de texto)
                   </label>
                   <input
                     id="informacion"
