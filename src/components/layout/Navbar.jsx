@@ -1,14 +1,25 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import BurguerButton from './BurguerButton'
+import { useAuth } from '../../hooks/useAuth'
 
 export default function Navbar() {
 
   const [clicked, setClicked] = useState(false)
+  const { isAuthenticated, logout, getUsuario } = useAuth()
+  const navigate = useNavigate()
 
   const handleClick = () => {
     setClicked(!clicked)
   }
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
+  const usuario = getUsuario()
 
   return (
     <>
@@ -38,6 +49,24 @@ export default function Navbar() {
                 <li><a className="dropdown-item text-white" href="#">Transporte</a></li>
               </ul>
             </div>
+
+            {isAuthenticated() && (
+              <div className="nav-item dropdown ms-3">
+                <a className="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                  {usuario?.nombre || 'Admin'}
+                </a>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item" href="/admin">Panel Admin</a></li>
+                  {usuario?.rol === 'superadmin' && (
+                    <>
+                      <li><a className="dropdown-item" href="/admin/usuarios">Gestionar Usuarios</a></li>
+                    </>
+                  )}
+                  <li><hr className="dropdown-divider" /></li>
+                  <li><button className="dropdown-item" onClick={handleLogout}>Cerrar Sesión</button></li>
+                </ul>
+              </div>
+            )}
           </ul>
 
           {/* Botón hamburguesa */}
@@ -56,6 +85,17 @@ export default function Navbar() {
             <a href="#Contacto" className='btn btn-link text-dark fs-4 mb-2'>Gastronomía</a>
             <a className="btn btn-link text-dark fs-4 mb-2" href="#">Excursiones</a>
             <a className="btn btn-link text-dark fs-4 mb-2" href="#">Transporte</a>
+
+            {isAuthenticated() && (
+              <>
+                <hr className='w-75' />
+                <a href="/admin" className='btn btn-link text-dark fs-4 mb-2'>Panel Admin</a>
+                {usuario?.rol === 'superadmin' && (
+                  <a href="/admin/usuarios" className='btn btn-link text-dark fs-4 mb-2'>Gestionar Usuarios</a>
+                )}
+                <button className="btn btn-link text-dark fs-4 mb-2" onClick={handleLogout}>Cerrar Sesión</button>
+              </>
+            )}
 
           </div>
         </BgDiv>
@@ -81,6 +121,12 @@ const NavContainer = styled.nav`
 
   .links-desktop a {
     margin: 0 0.5rem;
+  }
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
   }
 `
 

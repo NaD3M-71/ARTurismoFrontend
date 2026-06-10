@@ -4,22 +4,12 @@ export default function AboutUs() {
   return (
     <>
         <div className='m-5'>
-            <h2 className='text-dark fw-bold text-center mb-5'>SOBRE NOSOTROS</h2>
+            <h2 className='text-dark fw-bold text-center mb-5'>TU AVENTURA EMPIEZA AQUÍ</h2>
             <div className='d-flex'>
                 <div className='col-8'>
-                    <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius officiis porro voluptatum assumenda quod nesciunt optio dolor esse quis quibusdam odio blanditiis vitae sint omnis voluptatibus, voluptatem hic minus temporibus!</h4>
-                    <h5 className='my-4'>Donde Encontrarnos</h5>
-                    <div>
-                        <p>Teléfono</p>
-                        <p>Email</p>
-                        <p>Nuestras Redes Sociales</p>
-                        <div>
-                            <img src="assets/whatsapp1.svg" alt="Logo Whatsapp" className='me-2' />
-                            <img src="assets/Instagram.svg" alt="Logo Instagram" className='mx-2' />
-                            <img src="assets/X.svg" alt="Logo X"  className='mx-2'/>
-                            <img src="assets/Facebook.svg" alt="Logo Facebook"  className='mx-2'/>
-                        </div>
-                    </div>
+                    <h4>Somos el gran puente entre los viajeros y los mejores servicios turísticos de la zona. Nos dedicamos a mostrar todo lo que se puede vivir, conocer y disfrutar,conectando directamente con prestadores locales de confianza. Busca tu destino, ingresa a nuestras redes sociales. Tenemos las mejores opciones, viví una experiencia única con AR Turismo.<br></br>
+                    </h4>
+                
                 </div>
                 <div className='col-4 d-none d-md-block'>
                     <img src="assets/Artboard1.svg" alt="" />
@@ -27,9 +17,9 @@ export default function AboutUs() {
             </div>
         </div>
             <div className='amarilloART p-5 d-flex flex-column align-items-center'>
-                <h4 className='text-center'>Sos prestador y querés formar parte de AR Turismo? <br></br>Contactanos directamente</h4>
+                <h4 className='text-center'>Sos prestador de servicios y querés formar parte de AR Turismo? <br></br>Conocé nuestra propuesta </h4>
                 <div>
-                    <a href="mailto:somos.arturismo@gmail.com" className='btn btn-celeste text-dark fw-bold btn-contacto' >ACÁ</a>
+                    <a href="/formulario-proveedor" className='btn btn-celeste text-dark fw-bold btn-contacto' >QUIERO SUMARME</a>
                 </div>
             </div>
     </>

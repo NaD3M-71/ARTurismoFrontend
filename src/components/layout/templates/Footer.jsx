@@ -21,11 +21,11 @@ export default function Footer() {
             <div className="col-12 col-md-6 text-center mb-3 mb-md-0">
               <h5 className="fw-bold mb-3">Sobre Nosotros</h5>
               <div className="d-flex flex-column gap-2">
-                <a href="/biografia" className="text-white text-decoration-none">
+                <a href="/quienes-somos" className="text-white text-decoration-none">
                   Quiénes somos
                 </a>
-                <a href="#" className="text-white text-decoration-none">
-                  Contacto
+                <a href="/biografia" className="text-white text-decoration-none">
+                  Biografía
                 </a>
                 <a href="#" className="text-white text-decoration-none">
                   Términos y condiciones
@@ -37,10 +37,10 @@ export default function Footer() {
             <div className="col-12 col-md-3 text-center">
               <h5 className="fw-bold mb-3">Síguenos</h5>
               <div className="d-flex justify-content-center gap-3">
-                <a href="#" className="social-btn whatsapp" title="WhatsApp">
+                <a href="https://wa.me/5492945653007?text=Hola%20quiero%20más%20info" className="social-btn whatsapp" title="WhatsApp">
                   <img src="/assets/whatsapp1.svg" alt="Logo Whatsapp" />
                 </a>
-                <a href="#" className="social-btn instagram" title="Instagram">
+                <a href="https://www.instagram.com/somos.arturismo/?utm_source=ig_web_button_share_sheet" className="social-btn instagram" title="Instagram">
                   <img src="/assets/Instagram.svg" alt="Logo Instagram" />
                 </a>
                 <a href="#" className="social-btn twitter" title="X">

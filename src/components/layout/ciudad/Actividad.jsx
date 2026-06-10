@@ -1,11 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import clienteAxios from "../../../config/axios";
 import "trix/dist/trix.css";
+import LoadingScreen from "../templates/LoadingScreen";
+import NotFound from "../NotFound";
 
 export default function Actividad() {
   const { id } = useParams();
   const [actividad, setActividad] = useState(null);
+  const [error, setError] = useState(false);
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
 
   useEffect(() => {
     const consultarAPI = async () => {
@@ -14,14 +19,35 @@ export default function Actividad() {
         setActividad(data);
         console.log(data);
       } catch (error) {
-        console.error("Error al obtener la actividad:", error);
+        setError(true);
       }
     };
 
     consultarAPI();
   }, [id]);
 
-  if (!actividad) return <p>Cargando...</p>;
+  useEffect(() => {
+    if (!actividad?.lat || !actividad?.lng) return;
+
+    const lat = parseFloat(actividad.lat);
+    const lng = parseFloat(actividad.lng);
+    if (isNaN(lat) || isNaN(lng)) return;
+
+    const map = window.L.map(mapRef.current).setView([lat, lng], 15);
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    window.L.marker([lat, lng]).addTo(map).bindPopup(actividad.nombre).openPopup();
+    mapInstanceRef.current = map;
+
+    return () => {
+      map.remove();
+      mapInstanceRef.current = null;
+    };
+  }, [actividad]);
+
+  if (error) return <NotFound />;
+  if (!actividad) return <LoadingScreen />;
 
   return (
     <>
@@ -133,8 +159,8 @@ export default function Actividad() {
               </a>
             </div>
           </div>
-          <div className="mapa col-6" id="map">
-            <iframe width="600" height="450" style={{border: 0}} loading="lazy"  src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJOelF_D2sHZYRQzoxcqrK0rQ&key=..."></iframe>
+          <div className="mapa col-6">
+            <div ref={mapRef} style={{ height: '450px', width: '100%', borderRadius: '8px' }}></div>
           </div>
         </div>
       </div>

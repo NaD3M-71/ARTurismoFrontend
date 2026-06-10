@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import clienteAxios from "../../config/axios";
 import Swal from 'sweetalert2';
@@ -17,9 +17,52 @@ export default function AgregarCliente() {
   });
 
   const [imagenes, guardarImagenes] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const mapPickerRef = useRef(null);
+  const mapPickerInstanceRef = useRef(null);
+  const markerRef = useRef(null);
 
   //navigate
   let navigate = useNavigate();
+
+  useEffect(() => {
+    clienteAxios.get('/categorias').then(({ data }) => setCategorias(data)).catch(console.error);
+  }, []);
+
+  const categoriasPorGrupo = useMemo(() => {
+    return categorias.reduce((acc, cat) => {
+      if (!acc[cat.grupo]) acc[cat.grupo] = [];
+      acc[cat.grupo].push(cat);
+      return acc;
+    }, {});
+  }, [categorias]);
+
+  useEffect(() => {
+    if (mapPickerInstanceRef.current) return;
+
+    const map = window.L.map(mapPickerRef.current).setView([-38.4161, -63.6167], 5);
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    map.on('click', (e) => {
+      const { lat, lng } = e.latlng;
+      if (markerRef.current) {
+        markerRef.current.setLatLng([lat, lng]);
+      } else {
+        markerRef.current = window.L.marker([lat, lng]).addTo(map);
+      }
+      guardarCliente(prev => ({ ...prev, lat: lat.toFixed(6), lng: lng.toFixed(6) }));
+    });
+
+    mapPickerInstanceRef.current = map;
+
+    return () => {
+      map.remove();
+      mapPickerInstanceRef.current = null;
+      markerRef.current = null;
+    };
+  }, []);
 
   //almacenar lo que escribe el usuario en el state
   const actualizarState = e =>{
@@ -60,7 +103,9 @@ export default function AgregarCliente() {
 		formData.append('telefono',cliente.telefono);
 		formData.append('instagram',cliente.instagram);
 		formData.append('facebook',cliente.facebook);
+    formData.append('whatsapp',cliente.whatsapp);
 		formData.append('url',cliente.url);
+    formData.append('descripcionCorta',cliente.descripcionCorta);
 		formData.append('descripcion',cliente.descripcion);
 		formData.append('informacion',cliente.informacion);
 		formData.append('lat',cliente.lat);
@@ -118,6 +163,14 @@ export default function AgregarCliente() {
                     <label className="form-label" htmlFor="direccion">Dirección</label>
                     <input className="form-control" type="text" name="direccion" onChange={actualizarState} required/>
                 </div>
+                <div className='campo'>
+                  <label className="form-label">Ubicación en el mapa</label>
+                  <p className="text-muted small mb-2">Hacé clic en el mapa para marcar la ubicación del proveedor</p>
+                  <div ref={mapPickerRef} style={{ height: '350px', width: '100%', borderRadius: '8px' }}></div>
+                  {cliente.lat && cliente.lng && (
+                    <p className="mt-2 small text-success">Coordenadas seleccionadas: {cliente.lat}, {cliente.lng}</p>
+                  )}
+                </div>
 								<input type="hidden" name="ciudad_id" value={`${ciudadNombre}`} />
                 <div className='campo'>
                   <label className="form-label" htmlFor="categoria">
@@ -131,47 +184,17 @@ export default function AgregarCliente() {
                     className='campo form-select'
                     required
                   >
-                    <option value="" disabled selected>
+                    <option value="" disabled defaultValue>
                       Selecciona una Categoría
                     </option>
 
-                    <optgroup label="Gastronomía">
-                      <option value="Restaurantes">Restaurantes</option>
-                      <option value="Chocolaterías">Chocolaterías</option>
-                      <option value="Cervecerías">Cervecerías</option>
-                      <option value="Heladerías">Heladerías</option>
-                      <option value="Confiterías">Confiterías</option>
-                    </optgroup>
-
-                    <optgroup label="Alojamiento">
-                      <option value="Departamentos">Departamentos</option>
-                      <option value="Cabañas">Cabañas</option>
-                      <option value="Hostel">Hostel</option>
-                      <option value="Hoteles">Hoteles</option>
-                    </optgroup>
-
-                    <optgroup label="Transportes">
-                      <option value="RentaCar">Rent a Car</option>
-                      <option value="Taxis">Taxis</option>
-                      <option value="Remises">Remises</option>
-                      <option value="Combis">Combis</option>
-                      <option value="Colectivos">Colectivos</option>
-                    </optgroup>
-
-                    <optgroup label="ComerciosExtras">
-                      <option value="Farmacias">Farmacias</option>
-                      <option value="EstacionesDeServicio">
-                        Estaciones de Servicio
-                      </option>
-                    </optgroup>
-
-                    <optgroup label="Vida Nocturna">
-                      <option value="Cervecerías">
-                        Cervecerías
-                      </option>
-                      <option value="Boliches">Boliches</option>
-                      <option value="Clubs">Clubs</option>
-                    </optgroup>
+                    {Object.entries(categoriasPorGrupo).map(([grupo, cats]) => (
+                      <optgroup key={grupo} label={grupo}>
+                        {cats.map((cat) => (
+                          <option key={cat._id} value={cat.nombre}>{cat.nombre}</option>
+                        ))}
+                      </optgroup>
+                    ))}
 
                   </select>
                 </div>

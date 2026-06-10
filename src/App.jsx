@@ -1,6 +1,3 @@
-
-
-
 //Routing
 import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
 
@@ -19,7 +16,16 @@ import EditarCliente from './components/admin/EditarCliente';
 import EditarCiudad from './components/admin/EditarCiudad';
 import EditarImagenesCliente from './components/admin/EditarImagenesCliente';
 import Biografia from './components/layout/biografias/Biografia';
-
+import QuienesSomos from './components/layout/biografias/QuienesSomos';
+import Busqueda from './components/layout/Busqueda';
+import Login from './components/auth/Login';
+import ProtectedRoute from './components/ProtectedRoute';
+import GestionUsuarios from './components/admin/GestionUsuarios';
+import GestionCategorias from './components/admin/GestionCategorias';
+import GestionBanner from './components/admin/GestionBanner';
+import GestionConsultas from './components/admin/GestionConsultas';
+import FormularioProveedor from './components/layout/FormularioProovedor';
+import NotFound from './components/layout/NotFound';
 
 
 function App() {
@@ -35,18 +41,27 @@ function App() {
             <Route exact path='/ciudad/:id' element={<Ciudad ciudad />}></Route>
             <Route exact path='/ciudades' element={<Ciudades />}></Route>
             <Route exact path='/actividad/:id' element={<Actividad actividad />}></Route>
-
+            <Route exact path='/login' element={<Login />}></Route>
+            <Route exact path='/busqueda' element={<Busqueda />}></Route>
+            <Route path="/biografia" element={<Biografia />} />
+            <Route path="/quienes-somos" element={<QuienesSomos />} />
+            <Route path="/formulario-proveedor" element={<FormularioProveedor />} />
 
             {/* Admin */}
-            <Route exact path='/admin' element={<Admin />}></Route>
-            <Route exact path='/admin/agregar-ciudad' element={<NuevaCiudad />}></Route>
-            <Route exact path='/admin/agregar-cliente' element={<NuevoCliente />}></Route>
-            <Route exact path='/admin/editar-cliente/:id' element={<EditarCliente />}></Route>
-            <Route exact path='/admin/editar-ciudad/:id' element={<EditarCiudad />}></Route>
-            <Route exact path='/admin/editar-cliente/:id/imagen' element={<EditarImagenesCliente />}></Route>
-            <Route exact path='/admin/ver-proveedores/:ciudadNombre' element={<VerProveedores proveedores/>}></Route>
-            <Route path="/biografia" element={<Biografia />} />
-            
+            <Route exact path='/admin' element={<ProtectedRoute><Admin /></ProtectedRoute>}></Route>
+            <Route exact path='/admin/usuarios' element={<ProtectedRoute><GestionUsuarios /></ProtectedRoute>}></Route>
+            <Route exact path='/admin/banner' element={<ProtectedRoute><GestionBanner /></ProtectedRoute>}></Route>
+            <Route exact path='/admin/categorias' element={<ProtectedRoute><GestionCategorias /></ProtectedRoute>}></Route>
+            <Route exact path='/admin/agregar-ciudad' element={<ProtectedRoute><NuevaCiudad /></ProtectedRoute>}></Route>
+            <Route exact path='/admin/agregar-cliente' element={<ProtectedRoute><NuevoCliente /></ProtectedRoute>}></Route>
+            <Route exact path='/admin/editar-cliente/:id' element={<ProtectedRoute><EditarCliente /></ProtectedRoute>}></Route>
+            <Route exact path='/admin/editar-ciudad/:id' element={<ProtectedRoute><EditarCiudad /></ProtectedRoute>}></Route>
+            <Route exact path='/admin/editar-cliente/:id/imagen' element={<ProtectedRoute><EditarImagenesCliente /></ProtectedRoute>}></Route>
+            <Route exact path='/admin/ver-proveedores/:ciudadNombre' element={<ProtectedRoute><VerProveedores proveedores/></ProtectedRoute>}></Route>
+            <Route exact path='/admin/consultas' element={<ProtectedRoute><GestionConsultas /></ProtectedRoute>}></Route>
+
+            {/* 404 */}
+            <Route path='*' element={<NotFound />} />
 
           </Routes>
         </main>

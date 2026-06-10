@@ -2,54 +2,19 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import clienteAxios from "../../../config/axios";
 import CarouselSwipper from "../templates/CarouselSwipper";
+import LoadingScreen from "../templates/LoadingScreen";
+import NotFound from "../NotFound";
+
+const ORDEN_GRUPOS = ["Gastronomía", "Alojamiento", "Transportes", "Vida Nocturna", "Otros"];
 
 export default function Ciudad() {
 
   const [ciudad, setCiudad] = useState(null);
   const [actividades, setActividades] = useState([]);
-  const [actividadesPorCategoria, setActividadesPorCategoria] = useState({});
+  const [actividadesPorGrupo, setActividadesPorGrupo] = useState({});
+  const [error, setError] = useState(false);
 
   const { id } = useParams();
-
-  // Categorías agrupadas
-  const categorias = {
-
-    gastronomia: [
-      "Restaurantes",
-      "Chocolaterías",
-      "Cervecerías",
-      "Heladerías",
-      "Confiterías"
-    ],
-
-    alojamiento: [
-      "Departamentos",
-      "Cabañas",
-      "Hostel",
-      "Hoteles"
-    ],
-
-    transportes: [
-      "Rent a Car",
-      "Taxis",
-      "Remises",
-      "Combis",
-      "Colectivos"
-    ],
-
-    comercios: [
-      "Farmacias",
-      "Estaciones de Servicio",
-      "Punto de Interés"
-    ],
-
-    vidaNocturna: [
-      "Cervecerías Nocturnas",
-      "Boliches",
-      "Clubs"
-    ]
-
-  };
 
   useEffect(() => {
 
@@ -57,60 +22,50 @@ export default function Ciudad() {
 
       try {
 
-        // Obtener ciudad
-        const { data: dataCiudad } = await clienteAxios.get(`/ciudades/${id}`);
+        const [{ data: dataCiudad }, { data: dataActividades }, { data: dataCategorias }] =
+          await Promise.all([
+            clienteAxios.get(`/ciudades/${id}`),
+            clienteAxios.get("/clientes"),
+            clienteAxios.get("/categorias"),
+          ]);
+
         setCiudad(dataCiudad);
 
-        // Obtener actividades
-        const { data: dataActividades } = await clienteAxios.get("/clientes");
-
-        // Filtrar actividades de la ciudad
         const actividadesCiudad = dataActividades.filter(
           actividad => actividad.ciudad_id === id
         );
-        console.log(actividadesCiudad);
         setActividades(actividadesCiudad);
 
-        // Agrupar actividades por categoría
-        const actividadesAgrupadas = {};
-
-        Object.entries(categorias).forEach(([grupo, subcategorias]) => {
-
-          actividadesAgrupadas[grupo] = actividadesCiudad.filter(
-            actividad =>
-              subcategorias.includes(actividad.categoria[0])
-          );
-
+        // Construir mapa nombre-de-categoría → grupo
+        const categoriaAGrupo = {};
+        dataCategorias.forEach(cat => {
+          categoriaAGrupo[cat.nombre] = cat.grupo;
         });
 
-        setActividadesPorCategoria(actividadesAgrupadas);
-        
-        console.log(actividadesAgrupadas);
+        // Agrupar actividades por grupo
+        const agrupadas = {};
+        actividadesCiudad.forEach(actividad => {
+          const nombreCat = Array.isArray(actividad.categoria)
+            ? actividad.categoria[0]
+            : actividad.categoria;
+          const grupo = categoriaAGrupo[nombreCat] || "Otros";
+          if (!agrupadas[grupo]) agrupadas[grupo] = [];
+          agrupadas[grupo].push(actividad);
+        });
+
+        setActividadesPorGrupo(agrupadas);
+
       } catch (error) {
-
-        console.log(error);
-
+        setError(true);
       }
 
     };
     consultarAPI();
-    
+
   }, [id]);
 
-  if (!ciudad) {
-
-    return (
-      <div className="d-flex align-items-center flex-column">
-        <img
-          src="/assets/ezgif.com-animated-gif-maker.gif"
-          alt="Loader de carga"
-          width={300}
-        />
-        <p className="text-center">Cargando...</p>
-      </div>
-    );
-
-  }
+  if (error) return <NotFound />;
+  if (!ciudad) return <LoadingScreen />;
 
   return (
     <>
@@ -178,44 +133,22 @@ export default function Ciudad() {
 
       </div>
 
-      {/* SECCIONES DINÁMICAS */}
-      {Object.entries(actividadesPorCategoria).map(([categoria, actividades]) => (
+      {/* SECCIONES POR GRUPO — solo muestra los grupos que tienen proveedores */}
+      {ORDEN_GRUPOS.filter(grupo => actividadesPorGrupo[grupo]?.length > 0).map(grupo => (
 
-        <div key={categoria}>
+        <div key={grupo}>
 
           <div className="amarilloART text-center py-5 mt-5">
-
-            <h3 className="fw-bold text-capitalize">
-
-              {categoria === "vidaNocturna"
-                ? "Vida Nocturna"
-                : categoria}
-
-              {" "}en <br />
-
-              {ciudad.nombre}
-
+            <h3 className="fw-bold">
+              {grupo} en <br /> {ciudad.nombre}
             </h3>
-
           </div>
 
           <div className="container">
-
-            {actividades.length > 0 ? (
-
-              <CarouselSwipper
-                actividades={actividades}
-                ciudadId={ciudad._id}
-              />
-
-            ) : (
-
-              <p className="text-center my-5">
-                No hay actividades de {categoria}.
-              </p>
-
-            )}
-
+            <CarouselSwipper
+              actividades={actividadesPorGrupo[grupo]}
+              ciudadId={ciudad._id}
+            />
           </div>
 
         </div>

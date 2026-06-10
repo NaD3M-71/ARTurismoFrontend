@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import clienteAxios from '../../config/axios';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Admin() {
   const [ciudades, setCiudades] = useState([]);
+  const { getUsuario } = useAuth();
+  const usuario = getUsuario();
 
   useEffect(() => {
     const obtenerCiudades = async () => {
@@ -33,8 +36,16 @@ export default function Admin() {
         <h1>Panel de Administración</h1>
       </div>
 
-      {/* Botón para agregar ciudad */}
-      <a className="btn btn-primary m-4" href="/admin/agregar-ciudad">AGREGAR CIUDAD</a>
+      {/* Botones principales */}
+      <div className="m-4">
+        <a className="btn btn-primary me-2" href="/admin/agregar-ciudad">AGREGAR CIUDAD</a>
+        <a className="btn btn-warning me-2" href="/admin/categorias">GESTIONAR CATEGORÍAS</a>
+        <a className="btn btn-secondary me-2" href="/admin/banner">BANNER DEL INICIO</a>
+        <a className="btn btn-warning me-2" href="/admin/consultas">CONSULTAS</a>
+        {usuario?.rol === 'superadmin' && (
+          <a className="btn btn-info" href="/admin/usuarios">GESTIONAR USUARIOS</a>
+        )}
+      </div>
 
       {/* Listado de ciudades por provincia */}
       <div className="m-5">

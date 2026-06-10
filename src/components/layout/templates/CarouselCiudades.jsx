@@ -18,18 +18,18 @@ export default function CarouselCiudades({ ciudades }) {
       <Swiper
         modules={[Navigation, Pagination]}
         spaceBetween={20}
-        slidesPerView={1} // Muestra 1 ciudad en móviles
+        slidesPerView={1}
         breakpoints={{
-          768: { slidesPerView: 3 }, // Muestra 3 ciudades en pantallas grandes
+          576: { slidesPerView: 2 },
+          992: { slidesPerView: 3 },
+          1200: { slidesPerView: 4 },
         }}
         navigation
         loop={true}
       >
         {maxCiudades.map((ciudad, index) => (
-          <SwiperSlide key={index}>
-            <div className="d-flex justify-content-center">
-              <CardCiudades data={ciudad} />
-            </div>
+          <SwiperSlide key={index} className="d-flex">
+            <CardCiudades data={ciudad} />
           </SwiperSlide>
         ))}
       </Swiper>

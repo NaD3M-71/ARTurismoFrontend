@@ -28,18 +28,18 @@ export default function CarouselSwipper({ actividades, ciudadId }) {
       <Swiper
         modules={[Navigation, Pagination]}
         spaceBetween={20}
-        slidesPerView={1} // 1 actividad en móvil
+        slidesPerView={1}
         breakpoints={{
-          768: { slidesPerView: 3 }, // 3 actividades en pantallas grandes
+          576: { slidesPerView: 2 },
+          992: { slidesPerView: 3 },
+          1200: { slidesPerView: 4 },
         }}
         navigation
         loop={true}
       >
         {maxActividades.map((actividad, index) => (
-          <SwiperSlide key={index}>
-            <div className="d-flex justify-content-center">
-              <CardActividad data={actividad} />
-            </div>
+          <SwiperSlide key={index} className="d-flex">
+            <CardActividad data={actividad} />
           </SwiperSlide>
         ))}
       </Swiper>
