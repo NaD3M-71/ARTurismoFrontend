@@ -1,3 +1,5 @@
+import "trix/dist/trix.css";
+
 const CUERPO_DEFAULT = 'Somos el gran puente entre los viajeros y los mejores servicios turísticos de la zona. Nos dedicamos a mostrar todo lo que se puede vivir, conocer y disfrutar, conectando directamente con prestadores locales de confianza. Busca tu destino, ingresa a nuestras redes sociales. Tenemos las mejores opciones, viví una experiencia única con AR Turismo.';
 
 export default function AboutUs({ titulo = 'TU AVENTURA EMPIEZA AQUÍ', cuerpo = '' }) {
@@ -6,8 +8,11 @@ export default function AboutUs({ titulo = 'TU AVENTURA EMPIEZA AQUÍ', cuerpo =
         <div className='m-5'>
             <h2 className='text-dark fw-bold text-center mb-5'>{titulo}</h2>
             <div className='d-flex'>
-                <div className='col-8'>
-                    <h4>{cuerpo || CUERPO_DEFAULT}</h4>
+                <div className='col-12 col-md-8 text-start'>
+                    <div
+                        className='trix-content fs-4'
+                        dangerouslySetInnerHTML={{ __html: cuerpo || CUERPO_DEFAULT }}
+                    />
                 </div>
                 <div className='col-4 d-none d-md-block'>
                     <img src="assets/Artboard1.svg" alt="" />

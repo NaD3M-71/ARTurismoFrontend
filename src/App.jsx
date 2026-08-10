@@ -6,6 +6,7 @@ import Header from './components/layout/Header';
 import Index from './components/layout/Index';
 import Ciudad from './components/layout/ciudad/Ciudad';
 import Footer from './components/layout/templates/Footer';
+import WhatsappFloatButton from './components/layout/templates/WhatsappFloatButton';
 import Admin from './components/admin/Admin';
 import NuevaCiudad from './components/admin/NuevaCiudad';
 import NuevoCliente from './components/admin/NuevoCliente';
@@ -69,6 +70,7 @@ function App() {
           </Routes>
         </main>
         <Footer></Footer>
+        <WhatsappFloatButton></WhatsappFloatButton>
       </>
 
     </Router>

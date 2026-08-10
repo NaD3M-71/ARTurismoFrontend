@@ -102,7 +102,7 @@ export default function Ciudad() {
 
       {/* HERO */}
       <div
-        className="indexCiudad d-flex align-items-center justify-content-center text-white mb-5"
+        className="indexCiudad d-flex align-items-center justify-content-center text-white mb-fluid"
         style={{
           backgroundImage: `url(${import.meta.env.VITE_BACKEND_URL}/uploads/${ciudad.imagen})`,
           backgroundSize: "cover",
@@ -117,15 +117,8 @@ export default function Ciudad() {
         ></div>
 
         <h1
-          className="upper text-center px-3"
-          style={{
-            position: "relative",
-            fontSize: "clamp(3rem, 10vw, 6rem)",
-            fontFamily: "Proxima Soft",
-            fontWeight: "900",
-            textTransform: "uppercase",
-            wordWrap: "break-word",
-          }}
+          className="titulo-hero text-center px-fluid"
+          style={{ position: "relative" }}
         >
           {ciudad.nombre}
         </h1>
@@ -134,17 +127,17 @@ export default function Ciudad() {
 
       {/* SOBRE */}
       <div>
-        <h2 className="text-center fw-bold my-5">
+        <h2 className="text-center fw-bold my-fluid">
           Sobre {ciudad.nombre}
         </h2>
 
-        <p className="text-center mx-3 mx-md-5 p-md-5">
+        <p className="texto text-center px-fluid">
           {ciudad.descripcion}
         </p>
       </div>
 
       {/* TODAS LAS ACTIVIDADES */}
-      <div className="amarilloART text-center py-5">
+      <div className="amarilloART text-center py-fluid">
         <h3 className="fw-bold">
           ¿Qué se puede hacer en <br /> {ciudad.nombre}?
         </h3>
@@ -152,7 +145,7 @@ export default function Ciudad() {
 
       <div className="container" id="actividades">
 
-        <h3 className="my-5">
+        <h3 className="my-fluid">
           Actividades en {ciudad.nombre}
         </h3>
 
@@ -172,7 +165,7 @@ export default function Ciudad() {
         return (
           <div key={grupo} id={GRUPO_IDS[grupo]}>
 
-            <div className="amarilloART text-center py-5 mt-5">
+            <div className="amarilloART text-center py-fluid mt-fluid">
               <h3 className="fw-bold">
                 {grupo} en <br /> {ciudad.nombre}
               </h3>

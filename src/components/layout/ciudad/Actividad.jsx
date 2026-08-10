@@ -18,6 +18,7 @@ export default function Actividad() {
         const { data } = await clienteAxios.get(`/clientes/${id}`);
         setActividad(data);
       } catch (error) {
+        console.log(error);
         setError(true);
       }
     };
@@ -50,19 +51,8 @@ export default function Actividad() {
 
   return (
     <>
-      <div className="text-center amarilloART my-5 d-flex">
-        <h1
-          className="m-5 text-center"
-          style={{
-            
-            fontSize: "50px",
-            fontFamily: "Poppins",
-            fontWeight: "900",
-            textTransform: "uppercase",
-            wordWrap: "break-word",
-            color: "#00BCC6",
-          }}
-        >
+      <div className="text-center amarilloART my-fluid">
+        <h1 className="titulo-hero text-celeste m-0 py-fluid px-fluid">
           {actividad.nombre}
         </h1>
       </div>
@@ -71,7 +61,7 @@ export default function Actividad() {
       {actividad.imagen && actividad.imagen.length > 0 ? (
         <div
           id="carouselExampleIndicators"
-          className="carousel slide container mb-5"
+          className="carousel slide container mb-fluid"
         >
           <div className="carousel-indicators">
             {actividad.imagen.slice(0, 5).map((_, index) => (
@@ -124,21 +114,21 @@ export default function Actividad() {
       ) : (
         <p className="text-center">No hay imágenes disponibles</p>
       )}
-      <div className="m-5 flex-column">
-        <h2 className="subtitulo fw-bold mb-5">Que es {actividad.nombre}?</h2>
+      <div className="m-fluid flex-column">
+        <h2 className="subtitulo fw-bold mb-fluid">Que es {actividad.nombre}?</h2>
         <p className="texto">{actividad.descripcion}</p>
       </div>
-      <div className="m-5 flex-column">
-        <h2 className="subtitulo fw-bold mb-5">Información</h2>
+      <div className="m-fluid flex-column">
+        <h2 className="subtitulo fw-bold mb-fluid">Información</h2>
         <div
           className="texto"
           dangerouslySetInnerHTML={{
             __html: actividad.informacion
           }}
         />
-        <div className="d-sm-flex d-block" style={{height: 450}}>
-          <div className="datos col-6 ">
-            <h5 className="text-center fw-bold m-5">Datos</h5>
+        <div className="d-flex flex-column flex-sm-row">
+          <div className="datos col-12 col-sm-6">
+            <h5 className="text-center fw-bold m-fluid">Datos</h5>
             <h6 className="m-3 text-center">{actividad.telefono}</h6>
             <h6 className="m-3 text-center">{actividad.email}</h6>
             <h6 className="m-3 text-center">{actividad.direccion}</h6>
@@ -158,16 +148,16 @@ export default function Actividad() {
               </a>
             </div>
           </div>
-          <div className="mapa col-6">
+          <div className="mapa col-12 col-sm-6 mt-4 mt-sm-0">
             <div ref={mapRef} style={{ height: '450px', width: '100%', borderRadius: '8px' }}></div>
           </div>
         </div>
       </div>
-      <div className="m-5">
+      <div className="m-fluid">
         <h3 className="subtitulo">Contactate directamente con {actividad.nombre}</h3>
         <p>Envía tus datos a {actividad.nombre} y ellos se contactarán a la brevedad</p>
         <div className="d-flex justify-content-around">
-          <form action="" className="col-5">
+          <form action="" className="col-12 col-md-5">
             <div >
               <label htmlFor="nombre">Nombre</label>
               <input type="text" name="nombre"  className="form-control"/>
@@ -186,7 +176,7 @@ export default function Actividad() {
             </div>
             <button type="send" className="btn btn-celeste my-5">Enviar</button>
           </form>
-          <div><img src="/assets/Asset1.png" alt="" height={360}/></div>
+          <div className="d-none d-md-block"><img src="/assets/Asset1.png" alt="" height={360}/></div>
         </div>
 
       </div>

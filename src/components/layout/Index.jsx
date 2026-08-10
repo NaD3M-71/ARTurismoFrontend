@@ -76,10 +76,10 @@ export default function Index() {
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
             name="ciudad"
-            className='form-control mx-4'
+            className='form-control mx-auto'
             placeholder='Buscá tu próximo destino'
           />
-          <button type="submit" className='btn btn-primary'>
+          <button type="submit" className='btn btn-primary m-2'>
               <img src="/assets/lupa.svg" alt="" />
           </button>
         </form>

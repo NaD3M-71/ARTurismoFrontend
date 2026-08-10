@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import clienteAxios from '../../config/axios';
+import "trix/dist/trix.css";
+import Trix from "trix";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
@@ -22,6 +24,7 @@ export default function GestionBanner() {
   const [mensajeTextos, setMensajeTextos] = useState('');
   const [errorTextos, setErrorTextos] = useState('');
   const [cargandoTextos, setCargandoTextos] = useState(false);
+  const trixEditorRef = useRef(null);
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -40,6 +43,12 @@ export default function GestionBanner() {
     };
     obtenerDatos();
   }, []);
+
+  // Sincronizar contenido del editor Trix cuando llegan los textos
+  useEffect(() => {
+    if (!trixEditorRef.current) return;
+    trixEditorRef.current?.editor?.loadHTML(textos.aboutus_cuerpo || "");
+  }, [textos.aboutus_cuerpo]);
 
   const handleArchivoChange = (e) => {
     const file = e.target.files[0];
@@ -168,13 +177,16 @@ export default function GestionBanner() {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label fw-semibold">Texto descriptivo</label>
-            <textarea
-              className="form-control"
-              rows={4}
-              value={textos.aboutus_cuerpo}
-              onChange={(e) => setTextos({ ...textos, aboutus_cuerpo: e.target.value })}
-              maxLength={600}
+            <label className="form-label fw-semibold" htmlFor="aboutus_cuerpo">Texto descriptivo</label>
+            <input
+              id="aboutus_cuerpo"
+              type="hidden"
+              value={textos.aboutus_cuerpo || ""}
+            />
+            <trix-editor
+              ref={trixEditorRef}
+              input="aboutus_cuerpo"
+              onInput={(e) => setTextos({ ...textos, aboutus_cuerpo: e.target.innerHTML })}
             />
           </div>
           {errorTextos && <div className="alert alert-danger">{errorTextos}</div>}
@@ -216,7 +228,10 @@ export default function GestionBanner() {
         {/* Sección AboutUs */}
         <div className="border rounded p-4">
           <h4 className="text-dark fw-bold text-center mb-3">{textos.aboutus_titulo}</h4>
-          <p className="text-secondary">{textos.aboutus_cuerpo}</p>
+          <div
+            className="trix-content text-secondary text-start"
+            dangerouslySetInnerHTML={{ __html: textos.aboutus_cuerpo || "" }}
+          />
         </div>
       </div>
 
