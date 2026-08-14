@@ -41,6 +41,7 @@ export default function Admin() {
         <a className="btn btn-primary me-2" href="/admin/agregar-ciudad">AGREGAR CIUDAD</a>
         <a className="btn btn-warning me-2" href="/admin/categorias">GESTIONAR CATEGORÍAS</a>
         <a className="btn btn-secondary me-2" href="/admin/banner">BANNER DEL INICIO</a>
+        <a className="btn btn-dark me-2" href="/admin/institucional">INSTITUCIONAL</a>
         <a className="btn btn-warning me-2" href="/admin/consultas">CONSULTAS</a>
         {usuario?.rol === 'superadmin' && (
           <a className="btn btn-info" href="/admin/usuarios">GESTIONAR USUARIOS</a>

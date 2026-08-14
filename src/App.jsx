@@ -18,6 +18,7 @@ import EditarCiudad from './components/admin/EditarCiudad';
 import EditarImagenesCliente from './components/admin/EditarImagenesCliente';
 import Biografia from './components/layout/biografias/Biografia';
 import QuienesSomos from './components/layout/biografias/QuienesSomos';
+import Institucional from './components/layout/biografias/Institucional';
 import Busqueda from './components/layout/Busqueda';
 import Actividades from './components/layout/Actividades';
 import Login from './components/auth/Login';
@@ -25,6 +26,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import GestionUsuarios from './components/admin/GestionUsuarios';
 import GestionCategorias from './components/admin/GestionCategorias';
 import GestionBanner from './components/admin/GestionBanner';
+import GestionInstitucional from './components/admin/GestionInstitucional';
 import GestionConsultas from './components/admin/GestionConsultas';
 import FormularioProveedor from './components/layout/FormularioProovedor';
 import NotFound from './components/layout/NotFound';
@@ -49,12 +51,14 @@ function App() {
             <Route exact path='/actividades' element={<Actividades />}></Route>
             <Route path="/biografia" element={<Biografia />} />
             <Route path="/quienes-somos" element={<QuienesSomos />} />
+            <Route path="/institucional" element={<Institucional />} />
             <Route path="/formulario-proveedor" element={<FormularioProveedor />} />
 
             {/* Admin */}
             <Route exact path='/admin' element={<ProtectedRoute><Admin /></ProtectedRoute>}></Route>
             <Route exact path='/admin/usuarios' element={<ProtectedRoute><GestionUsuarios /></ProtectedRoute>}></Route>
             <Route exact path='/admin/banner' element={<ProtectedRoute><GestionBanner /></ProtectedRoute>}></Route>
+            <Route exact path='/admin/institucional' element={<ProtectedRoute><GestionInstitucional /></ProtectedRoute>}></Route>
             <Route exact path='/admin/categorias' element={<ProtectedRoute><GestionCategorias /></ProtectedRoute>}></Route>
             <Route exact path='/admin/agregar-ciudad' element={<ProtectedRoute><NuevaCiudad /></ProtectedRoute>}></Route>
             <Route exact path='/admin/agregar-cliente' element={<ProtectedRoute><NuevoCliente /></ProtectedRoute>}></Route>

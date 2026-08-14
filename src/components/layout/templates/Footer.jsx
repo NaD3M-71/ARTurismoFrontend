@@ -27,8 +27,8 @@ export default function Footer() {
                 <a href="/biografia" className="text-white text-decoration-none">
                   Biografía
                 </a>
-                <a href="#" className="text-white text-decoration-none">
-                  Términos y condiciones
+                <a href="/institucional" className="text-white text-decoration-none">
+                  Institucional
                 </a>
               </div>
             </div>

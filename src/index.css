@@ -726,4 +726,62 @@ main{
   font-size: 12px;
 }
 
+/** Institucional: tarjetas de logo en el admin */
+.institucion-logo-card {
+  width: 160px;
+}
+
+.institucion-logo-img {
+  max-height: 80px;
+  object-fit: contain;
+}
+
+/** Institucional: carrusel horizontal de logos (público) */
+.logos-marquee {
+  overflow: hidden;
+  width: 100%;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.logos-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  width: max-content;
+  animation: logosMarquee 30s linear infinite;
+}
+
+.logos-marquee:hover .logos-marquee-track {
+  animation-play-state: paused;
+}
+
+.logos-marquee-item {
+  height: 80px;
+  width: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logos-marquee-item img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.logos-fila-estatica {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+}
+
+@keyframes logosMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 
