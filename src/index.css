@@ -223,6 +223,30 @@ main{
   max-width: fit-content;
 }
 
+/* Hover amarillo en cards de ciudades y actividades */
+.anchorCard .card {
+  border: 3px solid transparent;
+  box-shadow: 0 .125rem .5rem rgba(0, 0, 0, .3);
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.anchorCard .card:hover {
+  border-color: #FFF200;
+  box-shadow: 0 .125rem .5rem rgba(255, 242, 0, .5);
+}
+
+/* Hover amarillo en los botones del Navbar (Destinos, Gastronomía, etc.) */
+.nav-link {
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.nav-link:hover {
+  background-color: #FFF200 !important;
+  color: #000 !important;
+}
+
 .campo{
   margin: 10px;
 }

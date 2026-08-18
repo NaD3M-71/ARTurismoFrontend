@@ -30,14 +30,18 @@ import GestionInstitucional from './components/admin/GestionInstitucional';
 import GestionConsultas from './components/admin/GestionConsultas';
 import FormularioProveedor from './components/layout/FormularioProovedor';
 import NotFound from './components/layout/NotFound';
+import { LanguageProvider } from './context/LanguageContext';
+import LanguageGate from './components/layout/templates/LanguageGate';
 
 
 function App() {
 
 
   return (
+    <LanguageProvider>
     <Router>
       <>
+        <LanguageGate />
         <Header></Header>
         <main className=''>
           <Routes>
@@ -78,6 +82,7 @@ function App() {
       </>
 
     </Router>
+    </LanguageProvider>
   )
 }
 

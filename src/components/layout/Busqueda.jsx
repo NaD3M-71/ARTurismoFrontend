@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import clienteAxios from '../../config/axios';
 import CardActividad from './templates/CardActividades';
 import Card from './templates/CardCiudades';
@@ -8,6 +9,7 @@ export default function Busqueda() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const q = searchParams.get('q') || '';
+  const { t } = useTranslation();
 
   const [inputBusqueda, setInputBusqueda] = useState(q);
   const [ciudades, setCiudades] = useState([]);
@@ -115,7 +117,7 @@ export default function Busqueda() {
           value={inputBusqueda}
           onChange={(e) => setInputBusqueda(e.target.value)}
           className="form-control"
-          placeholder="Buscá tu próximo destino..."
+          placeholder={t('busqueda.buscarPlaceholder')}
         />
         <button type="submit" className="btn btn-primary px-4">
           <img src="/assets/lupa.svg" alt="Buscar" style={{ width: '20px' }} />
@@ -124,28 +126,28 @@ export default function Busqueda() {
 
       {q && (
         <h2 className="mb-4 fs-4">
-          Resultados para: <span className="fw-bold">"{q}"</span>
+          {t('busqueda.resultadosPara')} <span className="fw-bold">"{q}"</span>
         </h2>
       )}
 
       {cargando && (
         <div className="text-center py-5">
           <div className="spinner-border text-primary" role="status"></div>
-          <p className="mt-3 text-muted">Buscando...</p>
+          <p className="mt-3 text-muted">{t('busqueda.buscando')}</p>
         </div>
       )}
 
       {!cargando && sinResultados && (
         <div className="alert alert-info mt-2">
-          No se encontraron resultados para <strong>"{q}"</strong>.
-          Probá con otro término, por ejemplo: una ciudad, un lugar o una categoría.
+          {t('busqueda.sinResultados')} <strong>"{q}"</strong>.
+          {' '}{t('busqueda.sinResultadosTip')}
         </div>
       )}
 
       {/* Sección Ciudades */}
       {!cargando && ciudades.length > 0 && (
         <section className="mb-5">
-          <h3 className="fw-bold border-bottom pb-2 mb-3">Ciudades</h3>
+          <h3 className="fw-bold border-bottom pb-2 mb-3">{t('busqueda.ciudades')}</h3>
           <div className="row">
             {ciudades.map(ciudad => (
               <div key={ciudad._id} className="col-sm-6 col-md-4 mb-4">
@@ -160,12 +162,12 @@ export default function Busqueda() {
               onClick={cargarMasCiudades}
               disabled={cargandoMasCiudades}
             >
-              {cargandoMasCiudades ? 'Cargando...' : 'Ver más ciudades'}
+              {cargandoMasCiudades ? t('busqueda.cargando') : t('busqueda.verMasCiudades')}
             </button>
           ) : (
             hasCargadoMasCiudades && (
               <p className="text-muted small mt-2">
-                No hay más ciudades. Probá con otra búsqueda.
+                {t('busqueda.noHayMasCiudades')}
               </p>
             )
           )}
@@ -175,7 +177,7 @@ export default function Busqueda() {
       {/* Sección Actividades agrupadas por ciudad */}
       {!cargando && actividades.length > 0 && (
         <section className="mb-5">
-          <h3 className="fw-bold border-bottom pb-2 mb-3">Actividades</h3>
+          <h3 className="fw-bold border-bottom pb-2 mb-3">{t('busqueda.actividades')}</h3>
 
           {Object.entries(actividadesPorCiudad).map(([ciudad, acts]) => (
             <div key={ciudad} className="mb-5">
@@ -196,12 +198,12 @@ export default function Busqueda() {
               onClick={cargarMasActividades}
               disabled={cargandoMasActividades}
             >
-              {cargandoMasActividades ? 'Cargando...' : 'Ver más actividades'}
+              {cargandoMasActividades ? t('busqueda.cargando') : t('busqueda.verMasActividades')}
             </button>
           ) : (
             hasCargadoMasActividades && (
               <p className="text-muted small mt-2">
-                No hay más actividades. Probá con otra búsqueda.
+                {t('busqueda.noHayMasActividades')}
               </p>
             )
           )}

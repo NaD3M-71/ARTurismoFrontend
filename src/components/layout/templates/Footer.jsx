@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
+  const { t } = useTranslation();
   const añoDesdeNow = new Date(Date.now()).getFullYear();
   return (
     <>
@@ -19,23 +21,23 @@ export default function Footer() {
 
             {/* Columna central - Sobre Nosotros */}
             <div className="col-12 col-md-6 text-center mb-3 mb-md-0">
-              <h5 className="fw-bold mb-3">Sobre Nosotros</h5>
+              <h5 className="fw-bold mb-3">{t('footer.sobreNosotros')}</h5>
               <div className="d-flex flex-column gap-2">
                 <a href="/quienes-somos" className="text-white text-decoration-none">
-                  Quiénes somos
+                  {t('footer.quienesSomos')}
                 </a>
                 <a href="/biografia" className="text-white text-decoration-none">
-                  Biografía
+                  {t('footer.biografia')}
                 </a>
                 <a href="/institucional" className="text-white text-decoration-none">
-                  Institucional
+                  {t('footer.institucional')}
                 </a>
               </div>
             </div>
 
             {/* Columna derecha - Redes sociales */}
             <div className="col-12 col-md-3 text-center">
-              <h5 className="fw-bold mb-3">Síguenos</h5>
+              <h5 className="fw-bold mb-3">{t('footer.siguenos')}</h5>
               <div className="d-flex justify-content-center gap-3">
                 <a href="https://wa.me/5492945653007?text=Hola%20quiero%20más%20info" className="social-btn whatsapp" title="WhatsApp">
                   <img src="/assets/whatsapp1.svg" alt="Logo Whatsapp" />
@@ -55,7 +57,7 @@ export default function Footer() {
         </div>
       </div>
       <p className="celesteART text-white text-center m-0 py-3">
-        © {añoDesdeNow} ARTurismo - Todos los derechos reservados
+        © {añoDesdeNow} ARTurismo - {t('footer.derechos')}
       </p>
     </>
   );

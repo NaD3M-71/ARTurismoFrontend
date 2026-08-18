@@ -10,6 +10,7 @@ export default function EditarImagenesCliente() {
   const [cliente, setCliente] = useState([]);
   const [imagenes, setImagenes] = useState([]);
   const [imagenesNuevas, setImagenesNuevas] = useState([]);
+  const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
     const cargarImagenes = async () => {
@@ -56,6 +57,8 @@ export default function EditarImagenesCliente() {
 
   const subirImagenes = async () => {
     if (imagenesNuevas.length === 0) return;
+    if (enviando) return; // evita duplicados por doble click
+    setEnviando(true);
 
     const formData = new FormData();
     imagenesNuevas.forEach((img) => formData.append("imagen", img));
@@ -66,6 +69,7 @@ export default function EditarImagenesCliente() {
       navigate("/admin");
     } catch {
       Swal.fire("Error", "No se pudieron subir imágenes", "error");
+      setEnviando(false);
     }
   };
 
@@ -93,8 +97,15 @@ export default function EditarImagenesCliente() {
 
       <input type="file" multiple className="form-control mb-3" onChange={leerImagenes} />
 
-      <button className="btn btn-amarillo me-3" onClick={subirImagenes}>
-        Guardar Imágenes
+      <button className="btn btn-amarillo me-3" onClick={subirImagenes} disabled={enviando}>
+        {enviando ? (
+          <>
+            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Guardando...
+          </>
+        ) : (
+          'Guardar Imágenes'
+        )}
       </button>
 
       <button className="btn btn-secondary" onClick={() => navigate("/admin")}>

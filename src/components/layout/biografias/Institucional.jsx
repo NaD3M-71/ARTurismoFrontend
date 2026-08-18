@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import clienteAxios from '../../../config/axios';
+import { useIdioma } from '../../../context/LanguageContext';
+import { textoBilingue } from '../../../utils/idioma';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
@@ -8,12 +11,16 @@ const UMBRAL_MARQUEE = 6;
 
 const DEFAULTS_INSTITUCIONAL = {
   texto: 'Trabajamos junto a instituciones que apoyan y potencian el turismo regional, como secretarías de turismo, cámaras y agencias locales. Sumamos su respaldo para ofrecer una experiencia más completa y confiable a quienes nos visitan.',
-  terminos_condiciones: 'El uso de este sitio web implica la aceptación de estos términos y condiciones. ARTurismo actúa como intermediario entre viajeros y prestadores de servicios turísticos, sin asumir responsabilidad directa por la prestación de dichos servicios. La información publicada se actualiza periódicamente, pero recomendamos confirmar los detalles directamente con cada prestador antes de contratar.'
+  terminos_condiciones: 'El uso de este sitio web implica la aceptación de estos términos y condiciones. ARTurismo actúa como intermediario entre viajeros y prestadores de servicios turísticos, sin asumir responsabilidad directa por la prestación de dichos servicios. La información publicada se actualiza periódicamente, pero recomendamos confirmar los detalles directamente con cada prestador antes de contratar.',
+  texto_en: '',
+  terminos_condiciones_en: ''
 };
 
 export default function Institucional() {
   const [textos, setTextos] = useState(DEFAULTS_INSTITUCIONAL);
   const [logos, setLogos] = useState([]);
+  const { t } = useTranslation();
+  const { idioma } = useIdioma();
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -52,11 +59,11 @@ export default function Institucional() {
           />
 
           <h1 className="text-white fw-bold display-5 mb-3">
-            Institucional
+            {t('institucional.heroTitulo')}
           </h1>
 
           <p className="text-white fs-5 mx-auto col-lg-7 px-3">
-            Desde la Patagonia, con la mirada puesta en el mundo.
+            {t('institucional.heroSubtitulo')}
           </p>
         </div>
       </section>
@@ -68,14 +75,14 @@ export default function Institucional() {
           <div className="col-lg-10">
 
             <div className="text-center mb-5">
-              <h2 className="fw-bold text-dark mb-3">INSTITUCIONES</h2>
+              <h2 className="fw-bold text-dark mb-3">{t('institucional.institucionesTitulo')}</h2>
               <div className="mx-auto bg-warning rounded" style={{ width: '90px', height: '5px' }}></div>
             </div>
 
             <div className="card border-0 shadow-sm rounded-4 p-4 p-lg-5">
               <div
                 className="trix-content text-muted fs-5 lh-lg"
-                dangerouslySetInnerHTML={{ __html: textos.texto }}
+                dangerouslySetInnerHTML={{ __html: textoBilingue(textos, 'texto', idioma) }}
               />
             </div>
 
@@ -120,14 +127,14 @@ export default function Institucional() {
           <div className="col-lg-10">
 
             <div className="text-center mb-4">
-              <h2 className="fw-bold text-dark mb-3">TÉRMINOS Y CONDICIONES</h2>
+              <h2 className="fw-bold text-dark mb-3">{t('institucional.terminosTitulo')}</h2>
               <div className="mx-auto bg-warning rounded" style={{ width: '90px', height: '5px' }}></div>
             </div>
 
             <div className="card border-0 shadow-sm rounded-4 p-4">
               <div
                 className="trix-content text-muted small lh-lg"
-                dangerouslySetInnerHTML={{ __html: textos.terminos_condiciones }}
+                dangerouslySetInnerHTML={{ __html: textoBilingue(textos, 'terminos_condiciones', idioma) }}
               />
             </div>
 

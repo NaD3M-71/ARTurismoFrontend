@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import "trix/dist/trix.css";
 import clienteAxios from "../../../config/axios";
 import CarouselSwipper from "../templates/CarouselSwipper";
 import CardActividad from "../templates/CardActividades";
 import LoadingScreen from "../templates/LoadingScreen";
 import NotFound from "../NotFound";
+import { useIdioma } from "../../../context/LanguageContext";
+import { textoBilingue } from "../../../utils/idioma";
 
 const ORDEN_GRUPOS = ["Gastronomía", "Alojamiento", "Transportes", "Vida Nocturna", "Atractivos", "Servicios", "Otros"];
 const CAROUSEL_LIMIT = 8;
@@ -29,6 +33,8 @@ export default function Ciudad() {
 
   const { id } = useParams();
   const location = useLocation();
+  const { t } = useTranslation();
+  const { idioma } = useIdioma();
 
   useEffect(() => {
     if (!Object.keys(actividadesPorGrupo).length) return;
@@ -128,25 +134,27 @@ export default function Ciudad() {
       {/* SOBRE */}
       <div>
         <h2 className="text-center fw-bold my-fluid">
-          Sobre {ciudad.nombre}
+          {t('ciudad.sobre')} {ciudad.nombre}
         </h2>
 
-        <p className="texto text-center px-fluid">
-          {ciudad.descripcion}
-        </p>
+        <div
+          className="texto trix-content text-center px-fluid"
+          style={{ whiteSpace: 'pre-line' }}
+          dangerouslySetInnerHTML={{ __html: textoBilingue(ciudad, 'descripcion', idioma) }}
+        />
       </div>
 
       {/* TODAS LAS ACTIVIDADES */}
       <div className="amarilloART text-center py-fluid">
         <h3 className="fw-bold">
-          ¿Qué se puede hacer en <br /> {ciudad.nombre}?
+          {t('ciudad.quePuedeHacer')} <br /> {ciudad.nombre}?
         </h3>
       </div>
 
       <div className="container" id="actividades">
 
         <h3 className="my-fluid">
-          Actividades en {ciudad.nombre}
+          {t('ciudad.actividadesEn')} {ciudad.nombre}
         </h3>
 
         <CarouselSwipper
@@ -167,7 +175,7 @@ export default function Ciudad() {
 
             <div className="amarilloART text-center py-fluid mt-fluid">
               <h3 className="fw-bold">
-                {grupo} en <br /> {ciudad.nombre}
+                {t(`grupos.${grupo}`)} {t('ciudad.en')} <br /> {ciudad.nombre}
               </h3>
             </div>
 
@@ -196,8 +204,8 @@ export default function Ciudad() {
                     onClick={() => toggleGrupo(grupo)}
                   >
                     {expandido
-                      ? `Ver menos ${grupo.toLowerCase()}`
-                      : `Ver todos en ${grupo} (${items.length})`}
+                      ? `${t('ciudad.verMenos')} ${t(`grupos.${grupo}`).toLowerCase()}`
+                      : `${t('ciudad.verTodosEn')} ${t(`grupos.${grupo}`)} (${items.length})`}
                   </button>
                 </div>
               )}

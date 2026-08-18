@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clienteAxios from '../../config/axios';
 import Swal from 'sweetalert2';
+import "trix/dist/trix.css";
+import Trix from "trix";
 
 export default function NuevaCiudad() {
 
@@ -12,6 +14,7 @@ export default function NuevaCiudad() {
     });
 
     const [imagen, guardarImagen] = useState('');
+    const [enviando, setEnviando] = useState(false);
 
      //navigate
      let navigate = useNavigate();
@@ -33,6 +36,9 @@ export default function NuevaCiudad() {
     const agregarCiudad = async e =>{
         e.preventDefault();
 
+        if (enviando) return; // evita duplicados por doble click
+        setEnviando(true);
+
         //crear form data
         const formData = new FormData();
         formData.append('nombre', ciudad.nombre);
@@ -40,6 +46,8 @@ export default function NuevaCiudad() {
         formData.append('pais', ciudad.pais);
         formData.append('descripcion', ciudad.descripcion);
         formData.append('descripcioncorta', ciudad.descripcioncorta);
+        formData.append('descripcionEn', ciudad.descripcionEn || '');
+        formData.append('descripcioncortaEn', ciudad.descripcioncortaEn || '');
         formData.append('imagen', imagen);
         // enviar la peticion a la API
         try {
@@ -63,6 +71,7 @@ export default function NuevaCiudad() {
                 text: 'Por favor vuelva a intentar',
                 icon: "error"
             });
+            setEnviando(false);
     }
 
 
@@ -130,13 +139,34 @@ export default function NuevaCiudad() {
                     </select>
                 </div>
                 <div className='campo'>
-                    <label className="form-label" htmlFor="descripcion">Descripción ( Hasta 1000 caracteres )</label>
-                    <textarea className='form-control' type="text" name="descripcion" placeholder='Ingrese una descripcion para la ciudad maximo 1000 caracteres' onChange={actualizarState} maxLength={1000} required></textarea>
+                    <label className="form-label" htmlFor="descripcion">Descripción</label>
+                    <p className="text-muted small mb-1">Podés usar saltos de línea, negrita, etc.</p>
+                    <input id="descripcion" type="hidden" value={ciudad.descripcion || ""} />
+                    <trix-editor
+                        input="descripcion"
+                        onInput={(e) => guardarCiudad({ ...ciudad, descripcion: e.target.innerHTML })}
+                    />
                 </div>
                 <div className='campo'>
                     <label className="form-label" htmlFor="descripcioncorta">Descripción Corta (100 caracteres)</label>
                     <textarea className='form-control' type="text" name="descripcioncorta" placeholder='Ingrese una descripcion corta para la ciudad maximo 100 caracteres' onChange={actualizarState} maxLength={100} required></textarea>
                 </div>
+
+                <hr className='my-4' />
+                <p className='text-muted fw-normal'>Versión en inglés (opcional). Si no la cargás, en el sitio se muestra la descripción en español.</p>
+                <div className='campo'>
+                    <label className="form-label" htmlFor="descripcionEn">Descripción en inglés</label>
+                    <input id="descripcionEn" type="hidden" value={ciudad.descripcionEn || ""} />
+                    <trix-editor
+                        input="descripcionEn"
+                        onInput={(e) => guardarCiudad({ ...ciudad, descripcionEn: e.target.innerHTML })}
+                    />
+                </div>
+                <div className='campo'>
+                    <label className="form-label" htmlFor="descripcioncortaEn">Descripción corta en inglés</label>
+                    <textarea className='form-control' type="text" name="descripcioncortaEn" placeholder='Short English description (optional), max 100 characters' onChange={actualizarState} maxLength={100}></textarea>
+                </div>
+
                 <div>
                     <label htmlFor="imagen" className="form-label">Imagen</label>
                     <input 
@@ -148,7 +178,16 @@ export default function NuevaCiudad() {
                     />
                 </div>
 
-                <button className='btn btn-amarillo m-5' type="submit">Agregar Ciudad</button>
+                <button className='btn btn-amarillo m-5' type="submit" disabled={enviando}>
+                    {enviando ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Agregando...
+                        </>
+                    ) : (
+                        'Agregar Ciudad'
+                    )}
+                </button>
                 <a href='/admin'className='btn btn-danger m-5' >Cancelar</a>
             </form>
 

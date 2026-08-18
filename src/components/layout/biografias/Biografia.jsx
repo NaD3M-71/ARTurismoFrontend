@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 export default function Biografia() {
+  const { t } = useTranslation();
   return (
     <>
       {/* HERO */}
@@ -17,11 +20,11 @@ export default function Biografia() {
           />
 
           <h1 className="text-white fw-bold display-5 mb-3">
-            Nuestra Historia
+            {t('biografia.heroTitulo')}
           </h1>
 
           <p className="text-white fs-5 mx-auto col-lg-7 px-3">
-            Desde la Patagonia, con la mirada puesta en el mundo.
+            {t('biografia.heroSubtitulo')}
           </p>
         </div>
       </section>
@@ -31,7 +34,7 @@ export default function Biografia() {
       <section className="container py-5">
 
         <div className="text-center mb-5">
-          <h2 className="fw-bold text-dark mb-3">BIOGRAFÍA</h2>
+          <h2 className="fw-bold text-dark mb-3">{t('biografia.biografiaTitulo')}</h2>
           <div className="mx-auto bg-warning rounded" style={{ width: '90px', height: '5px' }}></div>
         </div>
 
@@ -50,20 +53,17 @@ export default function Biografia() {
             <div className="card border-0 shadow-sm rounded-4 p-4 p-lg-5">
 
               <h3 className="fw-bold mb-4 text-dark">
-                El alma y corazón de ARTurismo
+                {t('biografia.aracelititulo')}
               </h3>
 
               <p className="text-muted fs-5 lh-lg">
-                “Desde la Patagonia, con la mirada puesta en el mundo, ARTurismo nació para ser un motor de oportunidades y un referente.
-                Impulsamos el talento local y creamos los lazos para que cada rincón de nuestra tierra brille con el máximo potencial.”
+                {t('biografia.aracelicita')}
               </p>
 
               <p className="text-muted fs-5 lh-lg mb-0">
-                Hola, soy Araceli, el alma y el corazón de ARTurismo.
-                Desde la hermosa Patagonia Argentina, he dedicado los últimos cuatro años a hacer realidad este sueño.
+                {t('biografia.aracelitexto1')}
                 <br /><br />
-                Cada paso ha sido un aprendizaje constante y un compromiso inquebrantable con el turismo local.
-                Mi objetivo es claro: transformar ARTurismo en un referente del sector, contribuyendo al éxito de cada prestador y a la satisfacción de cada viajero.
+                {t('biografia.aracelitexto2')}
               </p>
 
             </div>
@@ -78,7 +78,7 @@ export default function Biografia() {
 
         <div className="text-center mb-5">
           <h2 className="fw-bold text-dark mb-3">
-            CONOCE AL EQUIPO QUE HACE POSIBLE LA MAGIA
+            {t('biografia.equipoTitulo')}
           </h2>
           <div className="mx-auto bg-warning rounded" style={{ width: '90px', height: '5px' }}></div>
         </div>
@@ -102,8 +102,7 @@ export default function Biografia() {
                 </h3>
 
                 <p className="text-muted text-center lh-lg mb-0">
-                  Nuestro programador, quien dio vida a esta plataforma con su experiencia en desarrollo web,
-                  transformando la visión de ARTurismo en una experiencia digital funcional, moderna y robusta.
+                  {t('biografia.giulianoTexto')}
                 </p>
               </div>
 
@@ -128,10 +127,7 @@ export default function Biografia() {
                 </h3>
 
                 <p className="text-muted text-center lh-lg mb-0">
-                  Con su excepcional visión de diseño en Figma,
-                  creó la experiencia visual que representa a ARTurismo,
-                  asegurando que la plataforma no solo sea funcional,
-                  sino también intuitiva y visualmente atractiva.
+                  {t('biografia.julietaTexto')}
                 </p>
               </div>
 
@@ -147,12 +143,11 @@ export default function Biografia() {
         <div className="container text-center py-4">
 
           <h2 className="fw-bold text-dark mb-4">
-            Este es nuestro viaje
+            {t('biografia.fraseTitulo')}
           </h2>
 
           <p className="fs-4 text-dark mx-auto col-lg-8 lh-lg">
-            “Únete a nosotros para construir juntos el futuro del turismo en Argentina,
-            uniendo experiencias que inspiran y conectan.”
+            “{t('biografia.fraseTexto')}”
           </p>
 
         </div>

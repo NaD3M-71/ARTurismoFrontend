@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import clienteAxios from "../../../config/axios";
 import "trix/dist/trix.css";
 import LoadingScreen from "../templates/LoadingScreen";
 import NotFound from "../NotFound";
+import { useIdioma } from "../../../context/LanguageContext";
+import { textoBilingue } from "../../../utils/idioma";
 
 export default function Actividad() {
   const { id } = useParams();
@@ -11,6 +14,8 @@ export default function Actividad() {
   const [error, setError] = useState(false);
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
+  const { t } = useTranslation();
+  const { idioma } = useIdioma();
 
   useEffect(() => {
     const consultarAPI = async () => {
@@ -112,23 +117,23 @@ export default function Actividad() {
           </button>
         </div>
       ) : (
-        <p className="text-center">No hay imágenes disponibles</p>
+        <p className="text-center">{t('actividad.noHayImagenes')}</p>
       )}
       <div className="m-fluid flex-column">
-        <h2 className="subtitulo fw-bold mb-fluid">Que es {actividad.nombre}?</h2>
-        <p className="texto">{actividad.descripcion}</p>
+        <h2 className="subtitulo fw-bold mb-fluid">{t('actividad.queEs')} {actividad.nombre}?</h2>
+        <p className="texto">{textoBilingue(actividad, 'descripcion', idioma)}</p>
       </div>
       <div className="m-fluid flex-column">
-        <h2 className="subtitulo fw-bold mb-fluid">Información</h2>
+        <h2 className="subtitulo fw-bold mb-fluid">{t('actividad.informacion')}</h2>
         <div
           className="texto"
           dangerouslySetInnerHTML={{
-            __html: actividad.informacion
+            __html: textoBilingue(actividad, 'informacion', idioma)
           }}
         />
         <div className="d-flex flex-column flex-sm-row">
           <div className="datos col-12 col-sm-6">
-            <h5 className="text-center fw-bold m-fluid">Datos</h5>
+            <h5 className="text-center fw-bold m-fluid">{t('actividad.datos')}</h5>
             <h6 className="m-3 text-center">{actividad.telefono}</h6>
             <h6 className="m-3 text-center">{actividad.email}</h6>
             <h6 className="m-3 text-center">{actividad.direccion}</h6>
@@ -154,27 +159,27 @@ export default function Actividad() {
         </div>
       </div>
       <div className="m-fluid">
-        <h3 className="subtitulo">Contactate directamente con {actividad.nombre}</h3>
-        <p>Envía tus datos a {actividad.nombre} y ellos se contactarán a la brevedad</p>
+        <h3 className="subtitulo">{t('actividad.contactateCon')} {actividad.nombre}</h3>
+        <p>{t('actividad.enviaDatos')} {actividad.nombre} {t('actividad.enviaDatosFin')}</p>
         <div className="d-flex justify-content-around">
           <form action="" className="col-12 col-md-5">
             <div >
-              <label htmlFor="nombre">Nombre</label>
+              <label htmlFor="nombre">{t('actividad.formNombre')}</label>
               <input type="text" name="nombre"  className="form-control"/>
             </div>
             <div >
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">{t('actividad.formEmail')}</label>
               <input type="text" name="email"  className="form-control"/>
             </div>
             <div >
-              <label htmlFor="telefono">Teléfono</label>
+              <label htmlFor="telefono">{t('actividad.formTelefono')}</label>
               <input type="text" name="nombre"  className="form-control"/>
             </div>
             <div>
-              <label htmlFor="consulta">Consulta</label>
+              <label htmlFor="consulta">{t('actividad.formConsulta')}</label>
               <textarea name="Consulta" className="form-control"></textarea>
             </div>
-            <button type="send" className="btn btn-celeste my-5">Enviar</button>
+            <button type="send" className="btn btn-celeste my-5">{t('actividad.enviar')}</button>
           </form>
           <div className="d-none d-md-block"><img src="/assets/Asset1.png" alt="" height={360}/></div>
         </div>

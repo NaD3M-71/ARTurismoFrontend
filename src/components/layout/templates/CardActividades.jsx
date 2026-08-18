@@ -1,6 +1,10 @@
+import { useIdioma } from '../../../context/LanguageContext';
+import { textoBilingue } from '../../../utils/idioma';
+
 export default function CardActividad(props) {
 
   const { data } = props;
+  const { idioma } = useIdioma();
 
   return (
 
@@ -25,7 +29,7 @@ export default function CardActividad(props) {
 
           <p className="text-muted text-center mb-0">
             <span className="text-dark informacion d-block">
-              {data.descripcionCorta}
+              {textoBilingue(data, 'descripcionCorta', idioma)}
             </span>
           </p>
 

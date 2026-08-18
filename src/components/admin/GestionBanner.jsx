@@ -8,7 +8,10 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 const DEFAULTS_TEXTOS = {
   titulo_banner: 'Recorré Argentina de la mejor manera!',
   aboutus_titulo: 'TU AVENTURA EMPIEZA AQUÍ',
-  aboutus_cuerpo: 'Somos el gran puente entre los viajeros y los mejores servicios turísticos de la zona. Nos dedicamos a mostrar todo lo que se puede vivir, conocer y disfrutar, conectando directamente con prestadores locales de confianza. Busca tu destino, ingresa a nuestras redes sociales. Tenemos las mejores opciones, viví una experiencia única con AR Turismo.'
+  aboutus_cuerpo: 'Somos el gran puente entre los viajeros y los mejores servicios turísticos de la zona. Nos dedicamos a mostrar todo lo que se puede vivir, conocer y disfrutar, conectando directamente con prestadores locales de confianza. Busca tu destino, ingresa a nuestras redes sociales. Tenemos las mejores opciones, viví una experiencia única con AR Turismo.',
+  titulo_banner_en: '',
+  aboutus_titulo_en: '',
+  aboutus_cuerpo_en: ''
 };
 
 export default function GestionBanner() {
@@ -25,6 +28,7 @@ export default function GestionBanner() {
   const [errorTextos, setErrorTextos] = useState('');
   const [cargandoTextos, setCargandoTextos] = useState(false);
   const trixEditorRef = useRef(null);
+  const trixEditorEnRef = useRef(null);
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -37,18 +41,18 @@ export default function GestionBanner() {
           setBannerActual(`${BACKEND_URL}/uploads/${dataBanner.banner}`);
         }
         setTextos(dataTextos);
+        // Cargar el contenido inicial en los editores Trix una sola vez.
+        // No usar un useEffect atado a textos.aboutus_cuerpo(_en): como onInput
+        // actualiza ese mismo state en cada tecla, ese efecto volvería a
+        // disparar loadHTML() en cada letra y reiniciaba el cursor al inicio.
+        trixEditorRef.current?.editor?.loadHTML(dataTextos.aboutus_cuerpo || "");
+        trixEditorEnRef.current?.editor?.loadHTML(dataTextos.aboutus_cuerpo_en || "");
       } catch (err) {
         console.error(err);
       }
     };
     obtenerDatos();
   }, []);
-
-  // Sincronizar contenido del editor Trix cuando llegan los textos
-  useEffect(() => {
-    if (!trixEditorRef.current) return;
-    trixEditorRef.current?.editor?.loadHTML(textos.aboutus_cuerpo || "");
-  }, [textos.aboutus_cuerpo]);
 
   const handleArchivoChange = (e) => {
     const file = e.target.files[0];
@@ -189,6 +193,44 @@ export default function GestionBanner() {
               onInput={(e) => setTextos({ ...textos, aboutus_cuerpo: e.target.innerHTML })}
             />
           </div>
+
+          <hr className="my-4" />
+          <p className="text-muted fw-normal">Versión en inglés (opcional). Si no la cargás, en el sitio se muestra el texto en español.</p>
+
+          <div className="mb-3">
+            <label className="form-label fw-semibold">Texto sobre el buscador (inglés)</label>
+            <input
+              type="text"
+              className="form-control"
+              value={textos.titulo_banner_en || ''}
+              onChange={(e) => setTextos({ ...textos, titulo_banner_en: e.target.value })}
+              maxLength={120}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label fw-semibold">Título "Tu aventura empieza aquí" (inglés)</label>
+            <input
+              type="text"
+              className="form-control"
+              value={textos.aboutus_titulo_en || ''}
+              onChange={(e) => setTextos({ ...textos, aboutus_titulo_en: e.target.value })}
+              maxLength={80}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label fw-semibold" htmlFor="aboutus_cuerpo_en">Texto descriptivo (inglés)</label>
+            <input
+              id="aboutus_cuerpo_en"
+              type="hidden"
+              value={textos.aboutus_cuerpo_en || ""}
+            />
+            <trix-editor
+              ref={trixEditorEnRef}
+              input="aboutus_cuerpo_en"
+              onInput={(e) => setTextos({ ...textos, aboutus_cuerpo_en: e.target.innerHTML })}
+            />
+          </div>
+
           {errorTextos && <div className="alert alert-danger">{errorTextos}</div>}
           {mensajeTextos && <div className="alert alert-success">{mensajeTextos}</div>}
           <button type="submit" className="btn btn-primary" disabled={cargandoTextos}>

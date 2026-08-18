@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 export default function QuienesSomos() {
+  const { t } = useTranslation();
   return (
     <>
       {/* HERO */}
@@ -17,11 +20,11 @@ export default function QuienesSomos() {
           />
 
           <h1 className="text-white fw-bold display-5 mb-3">
-            Nuestra Historia
+            {t('quienesSomos.heroTitulo')}
           </h1>
 
           <p className="text-white fs-5 mx-auto col-lg-7 px-3">
-            Desde la Patagonia, con la mirada puesta en el mundo.
+            {t('quienesSomos.heroSubtitulo')}
           </p>
         </div>
       </section>
@@ -33,19 +36,19 @@ export default function QuienesSomos() {
           <div className="col-lg-10">
 
             <div className="text-center mb-5">
-              <h2 className="fw-bold text-dark mb-3">SOBRE NOSOTROS</h2>
+              <h2 className="fw-bold text-dark mb-3">{t('quienesSomos.sobreTitulo')}</h2>
               <div className="mx-auto bg-warning rounded" style={{ width: '90px', height: '5px' }}></div>
             </div>
 
             <div className="card border-0 shadow-sm rounded-4 p-4 p-lg-5">
               <p className="text-muted fs-5 lh-lg mb-0">
-                ARTurismo es el punto de encuentro digital donde la pasión por viajar y la excelencia en el servicio se unen. Hemos creado una plataforma integral diseñada para potenciar a los prestadores de servicios turísticos y ofrecer experiencias inolvidables a los viajeros.
+                {t('quienesSomos.sobreTexto1')}
                 <br /><br />
-                A través de una robusta página web y una vibrante presencia en redes sociales, garantizamos la máxima visibilidad para nuestros socios y acceso fácil y confiable a una oferta turística de calidad para nuestros usuarios.
+                {t('quienesSomos.sobreTexto2')}
                 <br /><br />
-                Nuestro compromiso con la verificación rigurosa de cada prestador asegura estándares mínimos de calidad, brindando tranquilidad al turista y credibilidad al negocio.
+                {t('quienesSomos.sobreTexto3')}
                 <br /><br />
-                Más que un directorio, somos un sistema de apoyo y crecimiento, ofreciendo retroalimentación constante a los prestadores y una curaduría de contenido que enriquece la experiencia del usuario.
+                {t('quienesSomos.sobreTexto4')}
               </p>
             </div>
 
@@ -60,26 +63,26 @@ export default function QuienesSomos() {
 
           <div className="col-lg-5">
             <div className="card h-100 border-0 shadow-sm rounded-4 p-4">
-              <h3 className="fw-bold text-center mb-4 text-dark">MISIÓN</h3>
+              <h3 className="fw-bold text-center mb-4 text-dark">{t('quienesSomos.mision')}</h3>
 
               <p className="text-muted lh-lg mb-0">
-                Ser el nexo estratégico que empodera a los prestadores de servicios turísticos al ofrecerles herramientas de promoción digital avanzadas y soporte continuo, asegurando su crecimiento y visibilidad.
+                {t('quienesSomos.misionTexto1')}
                 <br /><br />
-                Paralelamente, nuestra misión es guiar a los viajeros hacia experiencias turísticas auténticas, seguras y memorables, garantizando la calidad a través de un riguroso proceso de selección.
+                {t('quienesSomos.misionTexto2')}
                 <br /><br />
-                Buscamos optimizar la conexión entre la oferta y la demanda, construyendo un ecosistema turístico donde la confianza y la excelencia son los pilares fundamentales.
+                {t('quienesSomos.misionTexto3')}
               </p>
             </div>
           </div>
 
           <div className="col-lg-5">
             <div className="card h-100 border-0 shadow-sm rounded-4 p-4">
-              <h3 className="fw-bold text-center mb-4 text-dark">VISIÓN</h3>
+              <h3 className="fw-bold text-center mb-4 text-dark">{t('quienesSomos.vision')}</h3>
 
               <p className="text-muted lh-lg mb-0">
-                Convertirnos en la plataforma líder e innovadora del turismo a nivel nacional, reconocida por ser el socio estratégico preferido de los prestadores y la primera elección de los viajeros.
+                {t('quienesSomos.visionTexto1')}
                 <br /><br />
-                Aspiramos a ser un referente de impacto positivo en la industria, redefiniendo la promoción turística a través de la excelencia operativa y un compromiso inquebrantable con la satisfacción y el éxito de cada parte de nuestra comunidad.
+                {t('quienesSomos.visionTexto2')}
               </p>
             </div>
           </div>
@@ -92,12 +95,11 @@ export default function QuienesSomos() {
         <div className="container text-center py-4">
 
           <h2 className="fw-bold text-dark mb-4">
-            Este es nuestro viaje
+            {t('quienesSomos.fraseTitulo')}
           </h2>
 
           <p className="fs-4 text-dark mx-auto col-lg-8 lh-lg">
-            “Únete a nosotros para construir juntos el futuro del turismo en Argentina,
-            uniendo experiencias que inspiran y conectan.”
+            “{t('quienesSomos.fraseTexto')}”
           </p>
 
         </div>

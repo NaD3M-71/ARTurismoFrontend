@@ -18,6 +18,7 @@ export default function AgregarCliente() {
 
   const [imagenes, guardarImagenes] = useState([]);
   const [categorias, setCategorias] = useState([]);
+  const [enviando, setEnviando] = useState(false);
   const mapPickerRef = useRef(null);
   const mapPickerInstanceRef = useRef(null);
   const markerRef = useRef(null);
@@ -92,6 +93,9 @@ export default function AgregarCliente() {
 	const agregarCliente= async e =>{
 		e.preventDefault();
 
+		if (enviando) return; // evita duplicados por doble click
+		setEnviando(true);
+
 		//crear formData
 		const formData = new FormData();
 		formData.append('nombre',cliente.nombre);
@@ -108,6 +112,9 @@ export default function AgregarCliente() {
     formData.append('descripcionCorta',cliente.descripcionCorta);
 		formData.append('descripcion',cliente.descripcion);
 		formData.append('informacion',cliente.informacion);
+		formData.append('descripcionCortaEn', cliente.descripcionCortaEn || '');
+		formData.append('descripcionEn', cliente.descripcionEn || '');
+		formData.append('informacionEn', cliente.informacionEn || '');
 		formData.append('lat',cliente.lat);
 		formData.append('lng',cliente.lng);
 		formData.append('tier',cliente.tier);
@@ -140,6 +147,7 @@ export default function AgregarCliente() {
 											text: 'Por favor vuelva a intentar',
 											icon: "error"
 									});
+			setEnviando(false);
 		}
 	}
 
@@ -255,6 +263,38 @@ export default function AgregarCliente() {
                     }
                   />
                 </div>
+
+                <hr className='my-4' />
+                <p className='text-muted fw-normal'>Versión en inglés (opcional). Si no la cargás, en el sitio se muestra el contenido en español.</p>
+                <div className='campo'>
+                    <label className="form-label" htmlFor="descripcionCortaEn">Descripción corta en inglés</label>
+                    <textarea className='form-control' type="text" name="descripcionCortaEn" placeholder='Short description (optional), max 100 characters' onChange={actualizarState} maxLength={100}></textarea>
+                </div>
+                <div className='campo'>
+                    <label className="form-label" htmlFor="descripcionEn">Descripción en inglés</label>
+                    <textarea className='form-control' type="text" name="descripcionEn" placeholder='Description (optional), max 1000 characters' onChange={actualizarState} maxLength={1000}></textarea>
+                </div>
+                <div className='campo'>
+                  <label className="form-label" htmlFor="informacionEn">
+                    Información Completa en inglés (opcional)
+                  </label>
+                  <input
+                    id="informacionEn"
+                    type="hidden"
+                    value={cliente.informacionEn || ""}
+                  />
+
+                  <trix-editor
+                    input="informacionEn"
+                    onInput={(e) =>
+                      guardarCliente({
+                        ...cliente,
+                        informacionEn: e.target.innerHTML
+                      })
+                    }
+                  />
+                </div>
+
 								<div className="campo">
 									<label htmlFor="tier" className="form-label">Clasificación</label>
 									<select name="tier" className="form-select" id="tier" onChange={actualizarState} defaultValue={"I"} required>
@@ -274,7 +314,16 @@ export default function AgregarCliente() {
                     />
                 </div>
 
-                <button className='btn btn-amarillo m-5' type="submit">Agregar Proveedor</button>
+                <button className='btn btn-amarillo m-5' type="submit" disabled={enviando}>
+                    {enviando ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Agregando...
+                        </>
+                    ) : (
+                        'Agregar Proveedor'
+                    )}
+                </button>
                 <a href='/admin'className='btn btn-danger m-5' >Cancelar</a>
 				</form>
     </div>

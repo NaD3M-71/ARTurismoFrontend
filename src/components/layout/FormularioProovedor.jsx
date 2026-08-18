@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import clienteAxios from '../../config/axios';
 import Swal from 'sweetalert2';
 
@@ -11,6 +12,7 @@ export default function FormularioProveedor() {
     mensaje: ''
   });
   const [enviando, setEnviando] = useState(false);
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,18 +50,18 @@ export default function FormularioProveedor() {
             color: '#00BCC6'
           }}
         >
-          PUBLICAR
+          {t('formularioProveedor.publicar')}
         </h1>
-        <h4 className="py-3">Envianos la información de tu negocio y te contactamos a la brevedad</h4>
+        <h4 className="py-3">{t('formularioProveedor.subtitulo')}</h4>
       </div>
 
       <div className="m-5">
-        <h3 className="subtitulo">Contactate directamente con ArTurismo</h3>
-        <p>Envía tus datos a ArTurismo y ellos se contactarán a la brevedad</p>
+        <h3 className="subtitulo">{t('formularioProveedor.contactate')}</h3>
+        <p>{t('formularioProveedor.enviaDatos')}</p>
         <div className="d-flex justify-content-around">
           <form onSubmit={handleSubmit} className="col-12 col-md-5">
             <div className="mb-3">
-              <label htmlFor="nombre">Nombre del Servicio *</label>
+              <label htmlFor="nombre">{t('formularioProveedor.nombreServicio')}</label>
               <input
                 type="text"
                 name="nombre"
@@ -71,7 +73,7 @@ export default function FormularioProveedor() {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="email">Email *</label>
+              <label htmlFor="email">{t('formularioProveedor.email')}</label>
               <input
                 type="email"
                 name="email"
@@ -83,7 +85,7 @@ export default function FormularioProveedor() {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="telefono">Teléfono</label>
+              <label htmlFor="telefono">{t('formularioProveedor.telefono')}</label>
               <input
                 type="text"
                 name="telefono"
@@ -94,7 +96,7 @@ export default function FormularioProveedor() {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="rubro">Rubro</label>
+              <label htmlFor="rubro">{t('formularioProveedor.rubro')}</label>
               <input
                 type="text"
                 name="rubro"
@@ -105,7 +107,7 @@ export default function FormularioProveedor() {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="mensaje">Consulta</label>
+              <label htmlFor="mensaje">{t('formularioProveedor.consulta')}</label>
               <textarea
                 name="mensaje"
                 id="mensaje"
@@ -120,7 +122,7 @@ export default function FormularioProveedor() {
               className="btn btn-celeste my-3"
               disabled={enviando}
             >
-              {enviando ? 'Enviando...' : 'Enviar'}
+              {enviando ? t('formularioProveedor.enviando') : t('formularioProveedor.enviar')}
             </button>
           </form>
         </div>

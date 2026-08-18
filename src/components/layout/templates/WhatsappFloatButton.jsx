@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const NUMERO_WPP = "5492945653007";
 
@@ -13,6 +14,7 @@ const construirLinkWpp = (mensaje) =>
 const WhatsappFloatButton = () => {
   const [abierto, setAbierto] = useState(false);
   const contenedorRef = useRef(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const manejarClickAfuera = (evento) => {
@@ -30,9 +32,9 @@ const WhatsappFloatButton = () => {
       {abierto && (
         <div className="wpp-float-menu">
           <div className="wpp-float-menu-header">
-            <p className="wpp-float-menu-titulo">¿Con quién querés hablar?</p>
+            <p className="wpp-float-menu-titulo">{t('whatsapp.conQuienHablar')}</p>
             <p className="wpp-float-menu-subtitulo">
-              Te respondemos por WhatsApp a la brevedad. La respuesta no siempre es inmediata.
+              {t('whatsapp.subtitulo')}
             </p>
           </div>
 
@@ -43,9 +45,9 @@ const WhatsappFloatButton = () => {
             className="wpp-float-menu-item"
             onClick={() => setAbierto(false)}
           >
-            <span className="wpp-float-menu-item-titulo">Soy cliente</span>
+            <span className="wpp-float-menu-item-titulo">{t('whatsapp.soyCliente')}</span>
             <span className="wpp-float-menu-item-desc">
-              Consultas sobre ciudades, actividades o mi paquete de viaje
+              {t('whatsapp.descCliente')}
             </span>
           </a>
 
@@ -56,9 +58,9 @@ const WhatsappFloatButton = () => {
             className="wpp-float-menu-item"
             onClick={() => setAbierto(false)}
           >
-            <span className="wpp-float-menu-item-titulo">Soy proveedor turístico</span>
+            <span className="wpp-float-menu-item-titulo">{t('whatsapp.soyProveedor')}</span>
             <span className="wpp-float-menu-item-desc">
-              Quiero contactarme con el responsable de la web
+              {t('whatsapp.descProveedor')}
             </span>
           </a>
         </div>

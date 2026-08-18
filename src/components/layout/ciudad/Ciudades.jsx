@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import clienteAxios from '../../../config/axios';
 import LoadingScreen from '../templates/LoadingScreen';
 
 export default function Ciudades() {
+  const { t } = useTranslation();
   const [ciudades, setCiudades] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [loading, setLoading] = useState(true);
@@ -34,12 +36,12 @@ export default function Ciudades() {
   return (
     <>
       <div className="amarilloART text-center py-5 px-3">
-        <h2 className="fw-bold mb-4">Destinos</h2>
+        <h2 className="fw-bold mb-4">{t('destinos.titulo')}</h2>
         <div className="d-flex justify-content-center">
           <input
             type="text"
             className="destinos-buscador"
-            placeholder="Buscar ciudad o provincia..."
+            placeholder={t('destinos.buscarPlaceholder')}
             value={busqueda}
             onChange={e => setBusqueda(e.target.value)}
           />
@@ -48,7 +50,7 @@ export default function Ciudades() {
 
       <div className="container my-5">
         {provincias.length === 0 ? (
-          <p className="text-center text-muted mt-4">No se encontraron destinos.</p>
+          <p className="text-center text-muted mt-4">{t('destinos.noEncontrados')}</p>
         ) : (
           provincias.map(provincia => (
             <div key={provincia} className="mb-5">

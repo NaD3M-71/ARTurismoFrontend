@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import clienteAxios from '../../config/axios';
 import Swal from 'sweetalert2';
+import "trix/dist/trix.css";
+import Trix from "trix";
 
 const EditarCiudad = () => {
   const { id } = useParams();
@@ -11,9 +13,14 @@ const EditarCiudad = () => {
     provincia: '',
     pais: '',
     descripcion: '',
-    descripcioncorta: ''
+    descripcioncorta: '',
+    descripcionEn: '',
+    descripcioncortaEn: ''
   });
   const [imagen, guardarImagen] = useState('');
+  const [enviando, setEnviando] = useState(false);
+  const descripcionEditorRef = useRef(null);
+  const descripcionEnEditorRef = useRef(null);
 
   useEffect(() => {
     cargarCiudad();
@@ -23,6 +30,12 @@ const EditarCiudad = () => {
     try {
       const response = await clienteAxios.get(`/ciudades/${id}`);
       guardarCiudad(response.data);
+      // Cargar el contenido inicial en los editores Trix una sola vez.
+      // No usar un useEffect atado a ciudad.descripcion(En): como onInput
+      // actualiza ese mismo state en cada tecla, ese efecto volvería a
+      // disparar loadHTML() en cada letra y reiniciaba el cursor al inicio.
+      descripcionEditorRef.current?.editor?.loadHTML(response.data.descripcion || "");
+      descripcionEnEditorRef.current?.editor?.loadHTML(response.data.descripcionEn || "");
     } catch (err) {
       Swal.fire({
         title: "Error al cargar la ciudad",
@@ -46,12 +59,17 @@ const EditarCiudad = () => {
   const actualizarCiudad = async (e) => {
     e.preventDefault();
 
+    if (enviando) return; // evita duplicados por doble click
+    setEnviando(true);
+
     const formData = new FormData();
     formData.append('nombre', ciudad.nombre);
     formData.append('provincia', ciudad.provincia);
     formData.append('pais', ciudad.pais);
     formData.append('descripcion', ciudad.descripcion);
     formData.append('descripcioncorta', ciudad.descripcioncorta);
+    formData.append('descripcionEn', ciudad.descripcionEn || '');
+    formData.append('descripcioncortaEn', ciudad.descripcioncortaEn || '');
     formData.append('imagen', imagen);
 
     try {
@@ -71,6 +89,7 @@ const EditarCiudad = () => {
         text: 'Por favor vuelva a intentar',
         icon: "error"
       });
+      setEnviando(false);
     }
   };
 
@@ -153,13 +172,12 @@ const EditarCiudad = () => {
 
           <div className='campo'>
             <label className="form-label" htmlFor="descripcion">Descripción</label>
-            <textarea
-              className="form-control"
-              name="descripcion"
-              placeholder='Descripción de la Ciudad'
-              value={ciudad.descripcion}
-              onChange={actualizarState}
-              maxLength={1000}
+            <p className="text-muted small mb-1">Podés usar saltos de línea, negrita, etc.</p>
+            <input id="descripcion" type="hidden" value={ciudad.descripcion || ""} />
+            <trix-editor
+              ref={descripcionEditorRef}
+              input="descripcion"
+              onInput={(e) => guardarCiudad({ ...ciudad, descripcion: e.target.innerHTML })}
             />
           </div>
 
@@ -175,6 +193,30 @@ const EditarCiudad = () => {
             />
           </div>
 
+          <hr className='my-4' />
+          <p className='text-muted fw-normal'>Versión en inglés (opcional). Si no la cargás, en el sitio se muestra la descripción en español.</p>
+          <div className='campo'>
+            <label className="form-label" htmlFor="descripcionEn">Descripción en inglés</label>
+            <input id="descripcionEn" type="hidden" value={ciudad.descripcionEn || ""} />
+            <trix-editor
+              ref={descripcionEnEditorRef}
+              input="descripcionEn"
+              onInput={(e) => guardarCiudad({ ...ciudad, descripcionEn: e.target.innerHTML })}
+            />
+          </div>
+
+          <div className='campo'>
+            <label className="form-label" htmlFor="descripcioncortaEn">Descripción corta en inglés</label>
+            <textarea
+              className="form-control"
+              name="descripcioncortaEn"
+              placeholder='Short English description (optional)'
+              value={ciudad.descripcioncortaEn || ''}
+              onChange={actualizarState}
+              maxLength={100}
+            />
+          </div>
+
           <div className='campo'>
             <label className="form-label" htmlFor="imagen">Imagen</label>
             <input
@@ -185,7 +227,16 @@ const EditarCiudad = () => {
             />
           </div>
 
-          <button type="submit" className='btn btn-primary'>Guardar Cambios</button>
+          <button type="submit" className='btn btn-primary' disabled={enviando}>
+            {enviando ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Guardando...
+              </>
+            ) : (
+              'Guardar Cambios'
+            )}
+          </button>
         </form>
       </div>
     </>

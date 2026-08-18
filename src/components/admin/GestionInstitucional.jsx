@@ -8,7 +8,9 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 const DEFAULTS_INSTITUCIONAL = {
   texto: '',
-  terminos_condiciones: ''
+  terminos_condiciones: '',
+  texto_en: '',
+  terminos_condiciones_en: ''
 };
 
 export default function GestionInstitucional() {
@@ -18,6 +20,8 @@ export default function GestionInstitucional() {
   const [cargandoTextos, setCargandoTextos] = useState(false);
   const textoEditorRef = useRef(null);
   const terminosEditorRef = useRef(null);
+  const textoEnEditorRef = useRef(null);
+  const terminosEnEditorRef = useRef(null);
 
   const [instituciones, setInstituciones] = useState([]);
   const [nombreInstitucion, setNombreInstitucion] = useState('');
@@ -35,23 +39,20 @@ export default function GestionInstitucional() {
         ]);
         setTextos(dataTextos);
         setInstituciones(dataInstituciones);
+        // Cargar el contenido inicial en los editores Trix una sola vez.
+        // No usar un useEffect atado a textos.texto/textos.terminos_condiciones:
+        // como onInput actualiza ese mismo state en cada tecla, ese efecto
+        // volvería a disparar loadHTML() en cada letra y reiniciaba el cursor.
+        textoEditorRef.current?.editor?.loadHTML(dataTextos.texto || "");
+        terminosEditorRef.current?.editor?.loadHTML(dataTextos.terminos_condiciones || "");
+        textoEnEditorRef.current?.editor?.loadHTML(dataTextos.texto_en || "");
+        terminosEnEditorRef.current?.editor?.loadHTML(dataTextos.terminos_condiciones_en || "");
       } catch (err) {
         console.error(err);
       }
     };
     obtenerDatos();
   }, []);
-
-  // Sincronizar contenido de los editores Trix cuando llegan los textos
-  useEffect(() => {
-    if (!textoEditorRef.current) return;
-    textoEditorRef.current?.editor?.loadHTML(textos.texto || "");
-  }, [textos.texto]);
-
-  useEffect(() => {
-    if (!terminosEditorRef.current) return;
-    terminosEditorRef.current?.editor?.loadHTML(textos.terminos_condiciones || "");
-  }, [textos.terminos_condiciones]);
 
   const handleTextosSubmit = async (e) => {
     e.preventDefault();
@@ -155,6 +156,29 @@ export default function GestionInstitucional() {
               ref={terminosEditorRef}
               input="terminos_condiciones"
               onInput={(e) => setTextos({ ...textos, terminos_condiciones: e.target.innerHTML })}
+            />
+          </div>
+
+          <hr className="my-4" />
+          <p className="text-muted fw-normal">Versión en inglés (opcional). Si no la cargás, en el sitio se muestra el texto en español.</p>
+
+          <div className="mb-3">
+            <label className="form-label fw-semibold" htmlFor="texto_institucional_en">Texto sobre instituciones (inglés)</label>
+            <input id="texto_institucional_en" type="hidden" value={textos.texto_en || ""} />
+            <trix-editor
+              ref={textoEnEditorRef}
+              input="texto_institucional_en"
+              onInput={(e) => setTextos({ ...textos, texto_en: e.target.innerHTML })}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-semibold" htmlFor="terminos_condiciones_en">Términos y condiciones (inglés)</label>
+            <input id="terminos_condiciones_en" type="hidden" value={textos.terminos_condiciones_en || ""} />
+            <trix-editor
+              ref={terminosEnEditorRef}
+              input="terminos_condiciones_en"
+              onInput={(e) => setTextos({ ...textos, terminos_condiciones_en: e.target.innerHTML })}
             />
           </div>
 

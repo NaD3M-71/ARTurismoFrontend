@@ -24,6 +24,9 @@ export default function EditarCliente() {
     descripcionCorta: "",
     descripcion: "",
     informacion: "",
+    descripcionCortaEn: "",
+    descripcionEn: "",
+    informacionEn: "",
     lat: "",
     lng: "",
     tier: "I",
@@ -31,11 +34,13 @@ export default function EditarCliente() {
 
   const [imagenes, guardarImagenes] = useState([]);
   const [categorias, setCategorias] = useState([]);
+  const [enviando, setEnviando] = useState(false);
   const mapPickerRef = useRef(null);
   const mapPickerInstanceRef = useRef(null);
   const markerRef = useRef(null);
   const informacionInputRef = useRef(null);
   const trixEditorRef = useRef(null);
+  const trixEditorEnRef = useRef(null);
   const initialCoordsSet = useRef(false);
 
   useEffect(() => {
@@ -56,6 +61,12 @@ export default function EditarCliente() {
       try {
         const { data } = await clienteAxios.get(`/clientes/${id}`);
         guardarCliente(data);
+        // Cargar el contenido inicial en los editores Trix una sola vez.
+        // No usar un useEffect atado a cliente.informacion(En): como onInput
+        // actualiza ese mismo state en cada tecla, ese efecto volvería a
+        // disparar loadHTML() en cada letra y reiniciaba el cursor al inicio.
+        trixEditorRef.current?.editor?.loadHTML(data.informacion || "");
+        trixEditorEnRef.current?.editor?.loadHTML(data.informacionEn || "");
       } catch (error) {
         console.error(error);
         Swal.fire("Error", "No se pudo cargar el cliente", "error");
@@ -118,13 +129,6 @@ export default function EditarCliente() {
     });
   };
 
-  // Sincronizar contenido del editor Trix cuando se carga el cliente
-  useEffect(() => {
-    if (!trixEditorRef.current) return;
-    if (cliente.informacion === undefined) return;
-    trixEditorRef.current?.editor?.loadHTML(cliente.informacion || "");
-  }, [cliente.informacion]);
-
   // Leer imágenes
   const leerArchivo = (e) => {
     const archivos = Array.from(e.target.files);
@@ -144,6 +148,9 @@ export default function EditarCliente() {
   // Editar cliente
   const editarCliente = async (e) => {
     e.preventDefault();
+
+    if (enviando) return; // evita duplicados por doble click
+    setEnviando(true);
 
     const formData = new FormData();
 
@@ -167,6 +174,7 @@ export default function EditarCliente() {
     } catch (error) {
       console.error(error);
       Swal.fire("Error", "No se pudo editar el cliente", "error");
+      setEnviando(false);
     }
   };
 
@@ -303,6 +311,52 @@ export default function EditarCliente() {
                   />
                 </div>
 
+        <hr className='my-4' />
+        <p className='text-muted fw-normal'>Versión en inglés (opcional). Si no la cargás, en el sitio se muestra el contenido en español.</p>
+        <div className='campo'>
+            <label className="form-label" htmlFor="descripcionCortaEn">Descripción corta en inglés</label>
+            <textarea
+              className='form-control'
+              name="descripcionCortaEn"
+              value={cliente.descripcionCortaEn || ""}
+              placeholder='Short description (optional)'
+              onChange={actualizarState}
+              maxLength={100}
+            ></textarea>
+        </div>
+        <div className="campo">
+          <label className="form-label">Descripción en inglés</label>
+          <textarea
+            className="form-control"
+            name="descripcionEn"
+            maxLength={1000}
+            value={cliente.descripcionEn || ""}
+            placeholder='Description (optional)'
+            onChange={actualizarState}
+          />
+        </div>
+        <div className='campo'>
+                  <label className="form-label" htmlFor="informacionEn">
+                    Información Completa en inglés (opcional)
+                  </label>
+                  <input
+                    id="informacionEn"
+                    type="hidden"
+                    value={cliente.informacionEn || ""}
+                  />
+
+                  <trix-editor
+                    ref={trixEditorEnRef}
+                    input="informacionEn"
+                    onInput={(e) =>
+                      guardarCliente({
+                        ...cliente,
+                        informacionEn: e.target.innerHTML
+                      })
+                    }
+                  />
+                </div>
+
         <div className="campo">
           <label className="form-label">Clasificación</label>
           <select
@@ -328,8 +382,15 @@ export default function EditarCliente() {
         </div>
         
 
-        <button className="btn btn-amarillo m-3" type="submit">
-          Guardar Cambios
+        <button className="btn btn-amarillo m-3" type="submit" disabled={enviando}>
+          {enviando ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Guardando...
+            </>
+          ) : (
+            'Guardar Cambios'
+          )}
         </button>
 
         <button

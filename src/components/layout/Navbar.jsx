@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import BurguerButton from './BurguerButton'
 import { useAuth } from '../../hooks/useAuth'
+import { useIdioma } from '../../context/LanguageContext'
 
 export default function Navbar() {
 
@@ -11,6 +13,8 @@ export default function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
   const enCiudad = location.pathname.startsWith('/ciudad/')
+  const { t } = useTranslation()
+  const { idioma, cambiarIdioma } = useIdioma()
 
   const handleClick = () => {
     setClicked(!clicked)
@@ -37,23 +41,34 @@ export default function Navbar() {
 
           {/* Menu Desktop */}
           <ul className="d-none d-sm-flex align-items-center links-desktop mb-0">
-            <a href="/destinos" className='nav-link text-white'>Destinos</a>
+            <a href="/destinos" className='nav-link text-white'>{t('nav.destinos')}</a>
             {enCiudad && (
               <>
-                <a href="#actividades" className='nav-link text-white'>Actividades</a>
-                <a href="#alojamiento" className='nav-link text-white'>Alojamiento</a>
-                <a href="#gastronomia" className='nav-link text-white'>Gastronomía</a>
+                <a href="#actividades" className='nav-link text-white'>{t('nav.actividades')}</a>
+                <a href="#alojamiento" className='nav-link text-white'>{t('nav.alojamiento')}</a>
+                <a href="#gastronomia" className='nav-link text-white'>{t('nav.gastronomia')}</a>
                 <div className="nav-item dropdown">
                   <a className="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
-                    Más
+                    {t('nav.mas')}
                   </a>
                   <ul className="dropdown-menu celesteART">
-                    <li><a className="dropdown-item text-white" href="#atractivos">Excursiones</a></li>
-                    <li><a className="dropdown-item text-white" href="#transportes">Transporte</a></li>
+                    <li><a className="dropdown-item text-white" href="#atractivos">{t('nav.excursiones')}</a></li>
+                    <li><a className="dropdown-item text-white" href="#transportes">{t('nav.transporte')}</a></li>
                   </ul>
                 </div>
               </>
             )}
+
+            {/* Selector de idioma */}
+            <div className="nav-item dropdown ms-3">
+              <a className="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                {idioma === 'en' ? 'EN' : 'ES'}
+              </a>
+              <ul className="dropdown-menu">
+                <li><button className="dropdown-item" onClick={() => cambiarIdioma('es')}>Español</button></li>
+                <li><button className="dropdown-item" onClick={() => cambiarIdioma('en')}>English</button></li>
+              </ul>
+            </div>
 
             {isAuthenticated() && (
               <div className="nav-item dropdown ms-3">
@@ -61,14 +76,14 @@ export default function Navbar() {
                   {usuario?.nombre || 'Admin'}
                 </a>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="/admin">Panel Admin</a></li>
+                  <li><a className="dropdown-item" href="/admin">{t('nav.panelAdmin')}</a></li>
                   {usuario?.rol === 'superadmin' && (
                     <>
-                      <li><a className="dropdown-item" href="/admin/usuarios">Gestionar Usuarios</a></li>
+                      <li><a className="dropdown-item" href="/admin/usuarios">{t('nav.gestionarUsuarios')}</a></li>
                     </>
                   )}
                   <li><hr className="dropdown-divider" /></li>
-                  <li><button className="dropdown-item" onClick={handleLogout}>Cerrar Sesión</button></li>
+                  <li><button className="dropdown-item" onClick={handleLogout}>{t('nav.cerrarSesion')}</button></li>
                 </ul>
               </div>
             )}
@@ -84,25 +99,43 @@ export default function Navbar() {
         <BgDiv className={clicked ? 'active' : ''}>
           <div className="menu-mobile d-flex flex-column align-items-center justify-content-center">
 
-            <a href="/destinos" className='btn btn-link text-dark fs-4 mb-2'>Destinos</a>
+            <a href="/destinos" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.destinos')}</a>
             {enCiudad && (
               <>
-                <a href="#actividades" className='btn btn-link text-dark fs-4 mb-2'>Actividades</a>
-                <a href="#alojamiento" className='btn btn-link text-dark fs-4 mb-2'>Alojamiento</a>
-                <a href="#gastronomia" className='btn btn-link text-dark fs-4 mb-2'>Gastronomía</a>
-                <a className="btn btn-link text-dark fs-4 mb-2" href="#atractivos">Excursiones</a>
-                <a className="btn btn-link text-dark fs-4 mb-2" href="#transportes">Transporte</a>
+                <a href="#actividades" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.actividades')}</a>
+                <a href="#alojamiento" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.alojamiento')}</a>
+                <a href="#gastronomia" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.gastronomia')}</a>
+                <a className="btn btn-link text-dark fs-4 mb-2" href="#atractivos">{t('nav.excursiones')}</a>
+                <a className="btn btn-link text-dark fs-4 mb-2" href="#transportes">{t('nav.transporte')}</a>
               </>
             )}
+
+            {/* Selector de idioma */}
+            <div className="d-flex gap-2 mb-2">
+              <button
+                type="button"
+                className={`btn btn-sm ${idioma === 'es' ? 'btn-celeste' : 'btn-outline-secondary'}`}
+                onClick={() => cambiarIdioma('es')}
+              >
+                🇦🇷 ES
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm ${idioma === 'en' ? 'btn-celeste' : 'btn-outline-secondary'}`}
+                onClick={() => cambiarIdioma('en')}
+              >
+                🇬🇧 EN
+              </button>
+            </div>
 
             {isAuthenticated() && (
               <>
                 <hr className='w-75' />
-                <a href="/admin" className='btn btn-link text-dark fs-4 mb-2'>Panel Admin</a>
+                <a href="/admin" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.panelAdmin')}</a>
                 {usuario?.rol === 'superadmin' && (
-                  <a href="/admin/usuarios" className='btn btn-link text-dark fs-4 mb-2'>Gestionar Usuarios</a>
+                  <a href="/admin/usuarios" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.gestionarUsuarios')}</a>
                 )}
-                <button className="btn btn-link text-dark fs-4 mb-2" onClick={handleLogout}>Cerrar Sesión</button>
+                <button className="btn btn-link text-dark fs-4 mb-2" onClick={handleLogout}>{t('nav.cerrarSesion')}</button>
               </>
             )}
 
