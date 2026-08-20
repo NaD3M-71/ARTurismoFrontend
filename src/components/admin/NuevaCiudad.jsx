@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clienteAxios from '../../config/axios';
 import Swal from 'sweetalert2';
@@ -15,9 +15,36 @@ export default function NuevaCiudad() {
 
     const [imagen, guardarImagen] = useState('');
     const [enviando, setEnviando] = useState(false);
+    const descripcionEditorRef = useRef(null);
+    const descripcionEnEditorRef = useRef(null);
 
      //navigate
      let navigate = useNavigate();
+
+    // Trix no garantiza el disparo de un evento nativo "input" en el elemento
+    // <trix-editor>; la forma confiable de escuchar cambios es su propio
+    // evento "trix-change".
+    useEffect(() => {
+        const el = descripcionEditorRef.current;
+        if (!el) return;
+        const handler = (e) => {
+            const html = e.target.innerHTML;
+            guardarCiudad(prev => ({ ...prev, descripcion: html }));
+        };
+        el.addEventListener('trix-change', handler);
+        return () => el.removeEventListener('trix-change', handler);
+    }, []);
+
+    useEffect(() => {
+        const el = descripcionEnEditorRef.current;
+        if (!el) return;
+        const handler = (e) => {
+            const html = e.target.innerHTML;
+            guardarCiudad(prev => ({ ...prev, descripcionEn: html }));
+        };
+        el.addEventListener('trix-change', handler);
+        return () => el.removeEventListener('trix-change', handler);
+    }, []);
 
     //almacenar lo que escribe el usuario en el state
     const actualizarState = e =>{
@@ -143,8 +170,8 @@ export default function NuevaCiudad() {
                     <p className="text-muted small mb-1">Podés usar saltos de línea, negrita, etc.</p>
                     <input id="descripcion" type="hidden" value={ciudad.descripcion || ""} />
                     <trix-editor
+                        ref={descripcionEditorRef}
                         input="descripcion"
-                        onInput={(e) => guardarCiudad({ ...ciudad, descripcion: e.target.innerHTML })}
                     />
                 </div>
                 <div className='campo'>
@@ -158,8 +185,8 @@ export default function NuevaCiudad() {
                     <label className="form-label" htmlFor="descripcionEn">Descripción en inglés</label>
                     <input id="descripcionEn" type="hidden" value={ciudad.descripcionEn || ""} />
                     <trix-editor
+                        ref={descripcionEnEditorRef}
                         input="descripcionEn"
-                        onInput={(e) => guardarCiudad({ ...ciudad, descripcionEn: e.target.innerHTML })}
                     />
                 </div>
                 <div className='campo'>

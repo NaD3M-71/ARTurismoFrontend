@@ -42,9 +42,10 @@ export default function GestionBanner() {
         }
         setTextos(dataTextos);
         // Cargar el contenido inicial en los editores Trix una sola vez.
-        // No usar un useEffect atado a textos.aboutus_cuerpo(_en): como onInput
-        // actualiza ese mismo state en cada tecla, ese efecto volvería a
-        // disparar loadHTML() en cada letra y reiniciaba el cursor al inicio.
+        // No usar un useEffect atado a textos.aboutus_cuerpo(_en): como el
+        // listener de cambios actualiza ese mismo state en cada tecla, ese
+        // efecto volvería a disparar loadHTML() en cada letra y reiniciaba
+        // el cursor al inicio.
         trixEditorRef.current?.editor?.loadHTML(dataTextos.aboutus_cuerpo || "");
         trixEditorEnRef.current?.editor?.loadHTML(dataTextos.aboutus_cuerpo_en || "");
       } catch (err) {
@@ -52,6 +53,31 @@ export default function GestionBanner() {
       }
     };
     obtenerDatos();
+  }, []);
+
+  // Trix no garantiza el disparo de un evento nativo "input" en el elemento
+  // <trix-editor>; la forma confiable de escuchar cambios (tanto de tipeo
+  // como de un loadHTML programático) es el evento propio "trix-change".
+  useEffect(() => {
+    const el = trixEditorRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      setTextos(prev => ({ ...prev, aboutus_cuerpo: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
+  }, []);
+
+  useEffect(() => {
+    const el = trixEditorEnRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      setTextos(prev => ({ ...prev, aboutus_cuerpo_en: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
   }, []);
 
   const handleArchivoChange = (e) => {
@@ -166,7 +192,7 @@ export default function GestionBanner() {
               type="text"
               className="form-control"
               value={textos.titulo_banner}
-              onChange={(e) => setTextos({ ...textos, titulo_banner: e.target.value })}
+              onChange={(e) => { const v = e.target.value; setTextos(prev => ({ ...prev, titulo_banner: v })); }}
               maxLength={120}
             />
           </div>
@@ -176,7 +202,7 @@ export default function GestionBanner() {
               type="text"
               className="form-control"
               value={textos.aboutus_titulo}
-              onChange={(e) => setTextos({ ...textos, aboutus_titulo: e.target.value })}
+              onChange={(e) => { const v = e.target.value; setTextos(prev => ({ ...prev, aboutus_titulo: v })); }}
               maxLength={80}
             />
           </div>
@@ -190,7 +216,6 @@ export default function GestionBanner() {
             <trix-editor
               ref={trixEditorRef}
               input="aboutus_cuerpo"
-              onInput={(e) => setTextos({ ...textos, aboutus_cuerpo: e.target.innerHTML })}
             />
           </div>
 
@@ -203,7 +228,7 @@ export default function GestionBanner() {
               type="text"
               className="form-control"
               value={textos.titulo_banner_en || ''}
-              onChange={(e) => setTextos({ ...textos, titulo_banner_en: e.target.value })}
+              onChange={(e) => { const v = e.target.value; setTextos(prev => ({ ...prev, titulo_banner_en: v })); }}
               maxLength={120}
             />
           </div>
@@ -213,7 +238,7 @@ export default function GestionBanner() {
               type="text"
               className="form-control"
               value={textos.aboutus_titulo_en || ''}
-              onChange={(e) => setTextos({ ...textos, aboutus_titulo_en: e.target.value })}
+              onChange={(e) => { const v = e.target.value; setTextos(prev => ({ ...prev, aboutus_titulo_en: v })); }}
               maxLength={80}
             />
           </div>
@@ -227,7 +252,6 @@ export default function GestionBanner() {
             <trix-editor
               ref={trixEditorEnRef}
               input="aboutus_cuerpo_en"
-              onInput={(e) => setTextos({ ...textos, aboutus_cuerpo_en: e.target.innerHTML })}
             />
           </div>
 

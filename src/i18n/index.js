@@ -92,6 +92,20 @@ const resources = {
         cargando: 'Cargando actividades...',
         noHay: 'No hay actividades disponibles.',
       },
+      categoriaPage: {
+        tituloGastronomia: 'Gastronomía en toda Argentina',
+        tituloAlojamiento: 'Alojamiento en toda Argentina',
+        tituloExcursiones: 'Excursiones en toda Argentina',
+        cargando: 'Cargando...',
+        noHay: 'Todavía no hay opciones cargadas en esta categoría.',
+        error: 'Ocurrió un error al cargar esta categoría. Probá de nuevo más tarde.',
+        verMas: 'Ver más',
+      },
+      tier: {
+        premium: 'Premium',
+        basico: 'Básico',
+        free: 'Free',
+      },
       formularioProveedor: {
         publicar: 'PUBLICAR',
         subtitulo: 'Envianos la información de tu negocio y te contactamos a la brevedad',
@@ -251,6 +265,20 @@ const resources = {
         titulo: 'All Activities',
         cargando: 'Loading activities...',
         noHay: 'No activities available.',
+      },
+      categoriaPage: {
+        tituloGastronomia: 'Food & Drink across Argentina',
+        tituloAlojamiento: 'Lodging across Argentina',
+        tituloExcursiones: 'Excursions across Argentina',
+        cargando: 'Loading...',
+        noHay: 'No options available in this category yet.',
+        error: 'Something went wrong loading this category. Please try again later.',
+        verMas: 'See more',
+      },
+      tier: {
+        premium: 'Premium',
+        basico: 'Basic',
+        free: 'Free',
       },
       formularioProveedor: {
         publicar: 'PUBLISH',

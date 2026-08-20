@@ -54,6 +54,53 @@ export default function GestionInstitucional() {
     obtenerDatos();
   }, []);
 
+  // Trix no garantiza el disparo de un evento nativo "input" en el elemento
+  // <trix-editor>; la forma confiable de escuchar cambios es su propio
+  // evento "trix-change".
+  useEffect(() => {
+    const el = textoEditorRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      setTextos(prev => ({ ...prev, texto: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
+  }, []);
+
+  useEffect(() => {
+    const el = terminosEditorRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      setTextos(prev => ({ ...prev, terminos_condiciones: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
+  }, []);
+
+  useEffect(() => {
+    const el = textoEnEditorRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      setTextos(prev => ({ ...prev, texto_en: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
+  }, []);
+
+  useEffect(() => {
+    const el = terminosEnEditorRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      setTextos(prev => ({ ...prev, terminos_condiciones_en: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
+  }, []);
+
   const handleTextosSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -145,7 +192,6 @@ export default function GestionInstitucional() {
             <trix-editor
               ref={textoEditorRef}
               input="texto_institucional"
-              onInput={(e) => setTextos({ ...textos, texto: e.target.innerHTML })}
             />
           </div>
 
@@ -155,7 +201,6 @@ export default function GestionInstitucional() {
             <trix-editor
               ref={terminosEditorRef}
               input="terminos_condiciones"
-              onInput={(e) => setTextos({ ...textos, terminos_condiciones: e.target.innerHTML })}
             />
           </div>
 
@@ -168,7 +213,6 @@ export default function GestionInstitucional() {
             <trix-editor
               ref={textoEnEditorRef}
               input="texto_institucional_en"
-              onInput={(e) => setTextos({ ...textos, texto_en: e.target.innerHTML })}
             />
           </div>
 
@@ -178,7 +222,6 @@ export default function GestionInstitucional() {
             <trix-editor
               ref={terminosEnEditorRef}
               input="terminos_condiciones_en"
-              onInput={(e) => setTextos({ ...textos, terminos_condiciones_en: e.target.innerHTML })}
             />
           </div>
 

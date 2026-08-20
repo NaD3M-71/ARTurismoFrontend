@@ -22,12 +22,39 @@ export default function AgregarCliente() {
   const mapPickerRef = useRef(null);
   const mapPickerInstanceRef = useRef(null);
   const markerRef = useRef(null);
+  const trixEditorRef = useRef(null);
+  const trixEditorEnRef = useRef(null);
 
   //navigate
   let navigate = useNavigate();
 
   useEffect(() => {
     clienteAxios.get('/categorias').then(({ data }) => setCategorias(data)).catch(console.error);
+  }, []);
+
+  // Trix no garantiza el disparo de un evento nativo "input" en el elemento
+  // <trix-editor>; la forma confiable de escuchar cambios es su propio
+  // evento "trix-change".
+  useEffect(() => {
+    const el = trixEditorRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      guardarCliente(prev => ({ ...prev, informacion: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
+  }, []);
+
+  useEffect(() => {
+    const el = trixEditorEnRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      guardarCliente(prev => ({ ...prev, informacionEn: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
   }, []);
 
   const categoriasPorGrupo = useMemo(() => {
@@ -254,13 +281,8 @@ export default function AgregarCliente() {
                   />
 
                   <trix-editor
+                    ref={trixEditorRef}
                     input="informacion"
-                    onInput={(e) =>
-                      guardarCliente({
-                        ...cliente,
-                        informacion: e.target.innerHTML
-                      })
-                    }
                   />
                 </div>
 
@@ -285,13 +307,8 @@ export default function AgregarCliente() {
                   />
 
                   <trix-editor
+                    ref={trixEditorEnRef}
                     input="informacionEn"
-                    onInput={(e) =>
-                      guardarCliente({
-                        ...cliente,
-                        informacionEn: e.target.innerHTML
-                      })
-                    }
                   />
                 </div>
 

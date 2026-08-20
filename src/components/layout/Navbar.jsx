@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import BurguerButton from './BurguerButton'
@@ -11,8 +11,6 @@ export default function Navbar() {
   const [clicked, setClicked] = useState(false)
   const { isAuthenticated, logout, getUsuario } = useAuth()
   const navigate = useNavigate()
-  const location = useLocation()
-  const enCiudad = location.pathname.startsWith('/ciudad/')
   const { t } = useTranslation()
   const { idioma, cambiarIdioma } = useIdioma()
 
@@ -42,22 +40,9 @@ export default function Navbar() {
           {/* Menu Desktop */}
           <ul className="d-none d-sm-flex align-items-center links-desktop mb-0">
             <a href="/destinos" className='nav-link text-white'>{t('nav.destinos')}</a>
-            {enCiudad && (
-              <>
-                <a href="#actividades" className='nav-link text-white'>{t('nav.actividades')}</a>
-                <a href="#alojamiento" className='nav-link text-white'>{t('nav.alojamiento')}</a>
-                <a href="#gastronomia" className='nav-link text-white'>{t('nav.gastronomia')}</a>
-                <div className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
-                    {t('nav.mas')}
-                  </a>
-                  <ul className="dropdown-menu celesteART">
-                    <li><a className="dropdown-item text-white" href="#atractivos">{t('nav.excursiones')}</a></li>
-                    <li><a className="dropdown-item text-white" href="#transportes">{t('nav.transporte')}</a></li>
-                  </ul>
-                </div>
-              </>
-            )}
+            <a href="/gastronomia" className='nav-link text-white'>{t('nav.gastronomia')}</a>
+            <a href="/alojamiento" className='nav-link text-white'>{t('nav.alojamiento')}</a>
+            <a href="/excursiones" className='nav-link text-white'>{t('nav.excursiones')}</a>
 
             {/* Selector de idioma */}
             <div className="nav-item dropdown ms-3">
@@ -100,15 +85,9 @@ export default function Navbar() {
           <div className="menu-mobile d-flex flex-column align-items-center justify-content-center">
 
             <a href="/destinos" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.destinos')}</a>
-            {enCiudad && (
-              <>
-                <a href="#actividades" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.actividades')}</a>
-                <a href="#alojamiento" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.alojamiento')}</a>
-                <a href="#gastronomia" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.gastronomia')}</a>
-                <a className="btn btn-link text-dark fs-4 mb-2" href="#atractivos">{t('nav.excursiones')}</a>
-                <a className="btn btn-link text-dark fs-4 mb-2" href="#transportes">{t('nav.transporte')}</a>
-              </>
-            )}
+            <a href="/gastronomia" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.gastronomia')}</a>
+            <a href="/alojamiento" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.alojamiento')}</a>
+            <a href="/excursiones" className='btn btn-link text-dark fs-4 mb-2'>{t('nav.excursiones')}</a>
 
             {/* Selector de idioma */}
             <div className="d-flex gap-2 mb-2">

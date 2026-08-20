@@ -77,6 +77,31 @@ export default function EditarCliente() {
     obtenerCliente();
   }, [id, navigate]);
 
+  // Trix no garantiza el disparo de un evento nativo "input" en el elemento
+  // <trix-editor>; la forma confiable de escuchar cambios es su propio
+  // evento "trix-change".
+  useEffect(() => {
+    const el = trixEditorRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      guardarCliente(prev => ({ ...prev, informacion: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
+  }, []);
+
+  useEffect(() => {
+    const el = trixEditorEnRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      guardarCliente(prev => ({ ...prev, informacionEn: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
+  }, []);
+
   // Inicializar mapa picker
   useEffect(() => {
     if (mapPickerInstanceRef.current) return;
@@ -302,12 +327,6 @@ export default function EditarCliente() {
                   <trix-editor
                     ref={trixEditorRef}
                     input="informacion"
-                    onInput={(e) =>
-                      guardarCliente({
-                        ...cliente,
-                        informacion: e.target.innerHTML
-                      })
-                    }
                   />
                 </div>
 
@@ -348,12 +367,6 @@ export default function EditarCliente() {
                   <trix-editor
                     ref={trixEditorEnRef}
                     input="informacionEn"
-                    onInput={(e) =>
-                      guardarCliente({
-                        ...cliente,
-                        informacionEn: e.target.innerHTML
-                      })
-                    }
                   />
                 </div>
 

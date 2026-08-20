@@ -45,6 +45,31 @@ const EditarCiudad = () => {
     }
   };
 
+  // Trix no garantiza el disparo de un evento nativo "input" en el elemento
+  // <trix-editor>; la forma confiable de escuchar cambios es su propio
+  // evento "trix-change".
+  useEffect(() => {
+    const el = descripcionEditorRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      guardarCiudad(prev => ({ ...prev, descripcion: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
+  }, []);
+
+  useEffect(() => {
+    const el = descripcionEnEditorRef.current;
+    if (!el) return;
+    const handler = (e) => {
+      const html = e.target.innerHTML;
+      guardarCiudad(prev => ({ ...prev, descripcionEn: html }));
+    };
+    el.addEventListener('trix-change', handler);
+    return () => el.removeEventListener('trix-change', handler);
+  }, []);
+
   const actualizarState = (e) => {
     guardarCiudad({
       ...ciudad,
@@ -177,7 +202,6 @@ const EditarCiudad = () => {
             <trix-editor
               ref={descripcionEditorRef}
               input="descripcion"
-              onInput={(e) => guardarCiudad({ ...ciudad, descripcion: e.target.innerHTML })}
             />
           </div>
 
@@ -201,7 +225,6 @@ const EditarCiudad = () => {
             <trix-editor
               ref={descripcionEnEditorRef}
               input="descripcionEn"
-              onInput={(e) => guardarCiudad({ ...ciudad, descripcionEn: e.target.innerHTML })}
             />
           </div>
 
