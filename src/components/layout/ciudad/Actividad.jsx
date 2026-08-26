@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 import clienteAxios from "../../../config/axios";
 import "trix/dist/trix.css";
 import LoadingScreen from "../templates/LoadingScreen";
@@ -8,10 +9,21 @@ import NotFound from "../NotFound";
 import { useIdioma } from "../../../context/LanguageContext";
 import { textoBilingue } from "../../../utils/idioma";
 
+const limpiarNumeroWpp = (numero) => (numero || "").replace(/\D/g, "");
+
+const construirMensajeWpp = ({ nombreProveedor, nombreVisitante, consulta, email }) => {
+  let mensaje = `Hola ${nombreProveedor} mi nombre es ${nombreVisitante} vengo derivad@ de la web de AR Turismo.\nMi consulta es la siguiente:\n${consulta}\n\n`;
+  mensaje += email
+    ? `pueden contestarme a este numero o contactarse conmigo al siguiente correo - ${email}`
+    : `pueden contestarme a este numero`;
+  return mensaje;
+};
+
 export default function Actividad() {
   const { id } = useParams();
   const [actividad, setActividad] = useState(null);
   const [error, setError] = useState(false);
+  const [formConsulta, setFormConsulta] = useState({ nombre: "", email: "", consulta: "" });
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const { t } = useTranslation();
@@ -50,6 +62,39 @@ export default function Actividad() {
       mapInstanceRef.current = null;
     };
   }, [actividad]);
+
+  const handleChangeConsulta = (e) => {
+    setFormConsulta({ ...formConsulta, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmitConsulta = (e) => {
+    e.preventDefault();
+    const nombre = formConsulta.nombre.trim();
+    const consulta = formConsulta.consulta.trim();
+    const email = formConsulta.email.trim();
+
+    if (!nombre || !consulta) {
+      Swal.fire(t('actividad.formIncompletoTitulo'), t('actividad.formIncompletoTexto'), 'warning');
+      return;
+    }
+
+    const numeroWpp = limpiarNumeroWpp(actividad.whatsapp || actividad.telefono);
+    if (!numeroWpp) {
+      Swal.fire(t('actividad.sinWhatsappTitulo'), t('actividad.sinWhatsappTexto'), 'error');
+      return;
+    }
+
+    const mensaje = construirMensajeWpp({
+      nombreProveedor: actividad.nombre,
+      nombreVisitante: nombre,
+      consulta,
+      email
+    });
+
+    window.open(`https://wa.me/${numeroWpp}?text=${encodeURIComponent(mensaje)}`, '_blank', 'noopener,noreferrer');
+
+    setFormConsulta({ nombre: '', email: '', consulta: '' });
+  };
 
   if (error) return <NotFound />;
   if (!actividad) return <LoadingScreen />;
@@ -139,9 +184,16 @@ export default function Actividad() {
             <h6 className="m-3 text-center">{actividad.direccion}</h6>
             <h6 className="m-3 text-center">{actividad.url}</h6>
             <div className="d-flex justify-content-center redes">
-              <a className="m-3 text-dark" href={`https://wa.me/${actividad.telefono}?text=Te%20escribo%20desde%20ARTurismo%20para%20hacerte%20una%20consulta:%20`}>
-                <i className="bi bi-whatsapp"></i>
-              </a>
+              {limpiarNumeroWpp(actividad.whatsapp || actividad.telefono) && (
+                <a
+                  className="m-3 text-dark"
+                  href={`https://wa.me/${limpiarNumeroWpp(actividad.whatsapp || actividad.telefono)}?text=${encodeURIComponent('Te escribo desde ARTurismo para hacerte una consulta: ')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="bi bi-whatsapp"></i>
+                </a>
+              )}
               <a className="m-3 text-dark" href={`https://instagram.com/${actividad.instagram}`}>
                 <i className="bi bi-instagram"></i>
               </a>
@@ -162,24 +214,46 @@ export default function Actividad() {
         <h3 className="subtitulo">{t('actividad.contactateCon')} {actividad.nombre}</h3>
         <p>{t('actividad.enviaDatos')} {actividad.nombre} {t('actividad.enviaDatosFin')}</p>
         <div className="d-flex justify-content-around">
-          <form action="" className="col-12 col-md-5">
-            <div >
+          <form onSubmit={handleSubmitConsulta} className="col-12 col-md-5">
+            <div>
               <label htmlFor="nombre">{t('actividad.formNombre')}</label>
-              <input type="text" name="nombre"  className="form-control"/>
+              <input
+                type="text"
+                name="nombre"
+                id="nombre"
+                value={formConsulta.nombre}
+                onChange={handleChangeConsulta}
+                className="form-control"
+                required
+              />
             </div>
-            <div >
+            <div>
               <label htmlFor="email">{t('actividad.formEmail')}</label>
-              <input type="text" name="email"  className="form-control"/>
-            </div>
-            <div >
-              <label htmlFor="telefono">{t('actividad.formTelefono')}</label>
-              <input type="text" name="nombre"  className="form-control"/>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={formConsulta.email}
+                onChange={handleChangeConsulta}
+                className="form-control"
+              />
             </div>
             <div>
               <label htmlFor="consulta">{t('actividad.formConsulta')}</label>
-              <textarea name="Consulta" className="form-control"></textarea>
+              <textarea
+                name="consulta"
+                id="consulta"
+                value={formConsulta.consulta}
+                onChange={handleChangeConsulta}
+                className="form-control"
+                rows={4}
+                required
+              ></textarea>
             </div>
-            <button type="send" className="btn btn-celeste my-5">{t('actividad.enviar')}</button>
+            <button type="submit" className="btn btn-celeste my-5">
+              <i className="bi bi-whatsapp me-2"></i>
+              {t('actividad.enviar')}
+            </button>
           </form>
           <div className="d-none d-md-block"><img src="/assets/Asset1.png" alt="" height={360}/></div>
         </div>

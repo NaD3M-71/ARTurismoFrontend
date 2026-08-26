@@ -6,6 +6,7 @@ export default function GestionConsultas() {
   const [consultas, setConsultas] = useState([]);
   const [filtro, setFiltro] = useState('todas');
   const [modalEmail, setModalEmail] = useState(null); // consulta seleccionada
+  const [modalVer, setModalVer] = useState(null); // consulta a ver completa
   const [emailForm, setEmailForm] = useState({ asunto: '', cuerpo: '' });
   const [enviando, setEnviando] = useState(false);
 
@@ -21,6 +22,14 @@ export default function GestionConsultas() {
   useEffect(() => {
     cargarConsultas();
   }, []);
+
+  const abrirModalVer = (consulta) => {
+    setModalVer(consulta);
+  };
+
+  const cerrarModalVer = () => {
+    setModalVer(null);
+  };
 
   const abrirModalEmail = (consulta) => {
     setModalEmail(consulta);
@@ -161,17 +170,25 @@ export default function GestionConsultas() {
                     </td>
                     <td>{consulta.rubro || <span className="text-muted">—</span>}</td>
                     <td style={{ maxWidth: '200px' }}>
-                      <span
-                        title={consulta.mensaje}
-                        style={{
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
-                          overflow: 'hidden'
-                        }}
-                      >
-                        {consulta.mensaje || <span className="text-muted">—</span>}
-                      </span>
+                      {consulta.mensaje ? (
+                        <span
+                          role="button"
+                          title="Click para ver el mensaje completo"
+                          onClick={() => abrirModalVer(consulta)}
+                          style={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            cursor: 'pointer',
+                            textDecoration: 'underline dotted'
+                          }}
+                        >
+                          {consulta.mensaje}
+                        </span>
+                      ) : (
+                        <span className="text-muted">—</span>
+                      )}
                     </td>
                     <td>
                       <span
@@ -182,6 +199,12 @@ export default function GestionConsultas() {
                     </td>
                     <td>
                       <div className="d-flex flex-column gap-1">
+                        <button
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={() => abrirModalVer(consulta)}
+                        >
+                          Ver consulta
+                        </button>
                         <button
                           className="btn btn-sm btn-info"
                           onClick={() => abrirModalEmail(consulta)}
@@ -211,6 +234,75 @@ export default function GestionConsultas() {
           </div>
         )}
       </div>
+
+      {/* Modal de ver consulta completa */}
+      {modalVer && (
+        <div
+          className="modal d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) cerrarModalVer(); }}
+        >
+          <div className="modal-dialog modal-lg modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  Consulta de {modalVer.nombre}
+                </h5>
+                <button type="button" className="btn-close" onClick={cerrarModalVer} />
+              </div>
+              <div className="modal-body">
+                <div className="row mb-3">
+                  <div className="col-sm-6">
+                    <strong>Fecha:</strong> {formatFecha(modalVer.fecha)}
+                  </div>
+                  <div className="col-sm-6">
+                    <strong>Estado:</strong>{' '}
+                    <span
+                      className={`badge ${modalVer.estado === 'pendiente' ? 'bg-warning text-dark' : 'bg-success'}`}
+                    >
+                      {modalVer.estado}
+                    </span>
+                  </div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-sm-6">
+                    <strong>Email:</strong> {modalVer.email}
+                  </div>
+                  <div className="col-sm-6">
+                    <strong>Teléfono:</strong> {modalVer.telefono || '—'}
+                  </div>
+                </div>
+                {modalVer.rubro && (
+                  <div className="mb-3">
+                    <strong>Rubro:</strong> {modalVer.rubro}
+                  </div>
+                )}
+                <div className="mb-2">
+                  <strong>Mensaje:</strong>
+                </div>
+                <div
+                  className="border rounded p-3 bg-light"
+                  style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', maxHeight: '50vh', overflowY: 'auto' }}
+                >
+                  {modalVer.mensaje || <span className="text-muted">—</span>}
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={cerrarModalVer}>
+                  Cerrar
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-info"
+                  onClick={() => { cerrarModalVer(); abrirModalEmail(modalVer); }}
+                >
+                  Enviar Email
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal de envío de email */}
       {modalEmail && (
